@@ -1,0 +1,325 @@
+import { Request, Response } from 'express'
+import fetch from 'node-fetch'
+import { DbError, unirArrayEnObjeto } from '../constants/general'
+import {
+  Personas,
+  provincias,
+  parametros,
+  Departamentos,
+} from '../entity/general'
+const conexion = require('../database/db')
+import { errorData } from '../constants/general'
+import { Empresa } from '../entity/auth'
+export type AnyType<T = any> = T
+
+exports.getPersonas = async (req: Request, res: Response) => {
+  const { doc_identidad } = await new Personas(req.body.condition)
+  try {
+    const response = await fetch(process.env.GET_PERSON_DATA + doc_identidad)
+    const { data } = await response.json()
+    if (data) {
+      res.status(200).send({ data })
+    } else {
+      res.status(400).send(DbError('Persona no encontrada'))
+    }
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getPersona = async (req: Request, res: Response) => {
+  const { doc_identidad } = await new Personas(req.body.condition)
+  conexion.query(
+    'SELECT * FROM empleados where doc_identidad = ?',
+    [doc_identidad],
+    (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        res.status(400).send({ message: errorData })
+      } else {
+        res.status(200).send({ message: 'Existe una persona' })
+      }
+    }
+  )
+}
+
+exports.getCivilState = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM estado_civil',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getNivelAcademico = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM nivel_academico',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+
+exports.getDepartamentos = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT D.*,E.nombres,E.apellidos,E.doc_identidad FROM departamentos D,empleados E WHERE d.id_empleado_encargado = E.id',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerDepartamentos = async (req: Request, res: Response) => {
+  const { departamento, usuario_insercion, id_empleado_encargado } =
+    await new Departamentos(req.body.condition)
+  conexion.query(
+    'INSERT INTO departamentos SET ?',
+    {
+      departamento: departamento,
+      fecha_insercion: new Date(),
+      usuario_insercion: usuario_insercion,
+      id_empleado_encargado: id_empleado_encargado,
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Departamento',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Departamento registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateDepartamentos = async (req: Request, res: Response) => {
+  const { id, departamento, usuario_insercion, id_empleado_encargado, estado } =
+    await new Departamentos(req.body.condition)
+
+  conexion.query(
+    'UPDATE departamentos SET departamento = ?,id_empleado_encargado = ?, usuario_insercion = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
+    [
+      departamento,
+      id_empleado_encargado,
+      usuario_insercion,
+      new Date(),
+      estado,
+      id,
+    ],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Departamento',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Departamento Actualizado con exito' })
+      }
+    }
+  )
+}
+exports.getNomina = async (req: Request, res: Response) => {
+  try {
+    conexion.query('SELECT * FROM nomina', (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        res.status(400).send({ message: errorData })
+      } else {
+        res.status(200).send({ data: results })
+      }
+    })
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getTipoDocumentos = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM tipo_documentos',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+
+exports.getInfoEmpresa = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM empresa',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getJornadaTrabajo = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM jornada_trabajo',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getCargo = async (req: Request, res: Response) => {
+  try {
+    conexion.query('SELECT * FROM cargos', (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        res.status(400).send({ message: errorData })
+      } else {
+        res.status(200).send({ data: results })
+      }
+    })
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getBloodType = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM tipos_sangre',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getParentesco = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM parentesco',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getTipoTelefono = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM tipos_telefono',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+
+exports.getPaises = async (req: Request, res: Response) => {
+  try {
+    conexion.query('SELECT * FROM paises', (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        res.status(400).send({ message: errorData })
+      } else {
+        res.status(200).send({ data: results })
+      }
+    })
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+
+exports.getProvincias = async (req: Request, res: Response) => {
+  const { id_pais } = await new provincias(req.body.condition)
+
+  try {
+    conexion.query(
+      id_pais === undefined
+        ? `SELECT * FROM provincias`
+        : `SELECT * FROM provincias WHERE id_pais = ?`,
+      [id_pais],
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+
+exports.getParametros = async (req: Request, res: Response) => {
+  const { id_actividad } = await new parametros(req.body.condition)
+
+  try {
+    conexion.query(
+      `SELECT * FROM parametros WHERE id_actividad = ? `,
+      [id_actividad],
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          let ArrayParametros = results.map((item: any) => {
+            return { [item.parametro]: item.valor }
+          }, [])
+          res.status(200).send({
+            data: unirArrayEnObjeto(ArrayParametros),
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
