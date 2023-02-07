@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-01-2023 a las 03:47:52
+-- Tiempo de generación: 07-02-2023 a las 15:53:20
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -21,6 +21,22 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `gestor_pacientes`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `administradores`
+--
+
+CREATE TABLE `administradores` (
+  `id` int(11) NOT NULL,
+  `nombres` varchar(50) NOT NULL,
+  `apellidos` varchar(50) NOT NULL,
+  `usuario` varchar(25) NOT NULL,
+  `clave` longtext NOT NULL,
+  `fecha_insercion` datetime NOT NULL,
+  `estado` varchar(1) NOT NULL DEFAULT 'A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -52,6 +68,7 @@ CREATE TABLE `doctores` (
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
   `cedula` varchar(12) NOT NULL,
+  `clave` longtext NOT NULL,
   `sexo` varchar(1) NOT NULL,
   `telefono` varchar(16) NOT NULL,
   `fecha_nacimiento` datetime NOT NULL,
@@ -110,13 +127,13 @@ CREATE TABLE `pacientes` (
   `cedula` varchar(12) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
-  `seguro` varchar(2) NOT NULL,
+  `fecha_nacimiento` datetime NOT NULL,
+  `id_seguro` int(11) NOT NULL,
+  `id_nacionalidad` int(11) NOT NULL,
   `telefono` varchar(12) NOT NULL,
   `sexo` varchar(1) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `usuario` varchar(15) NOT NULL,
   `clave` longtext NOT NULL,
-  `cargo` varchar(1) NOT NULL,
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -124,16 +141,13 @@ CREATE TABLE `pacientes` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estructura de tabla para la tabla `seguros`
 --
 
-CREATE TABLE `usuarios` (
+CREATE TABLE `seguros` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `clave` longtext NOT NULL,
-  `usuario` varchar(25) NOT NULL,
-  `email` varchar(25) NOT NULL,
-  `cargo` int(11) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -142,16 +156,26 @@ CREATE TABLE `usuarios` (
 --
 
 --
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `citas`
 --
 ALTER TABLE `citas`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_doctor` (`id_doctor`),
+  ADD KEY `id_paciente` (`id_paciente`);
 
 --
 -- Indices de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_especialidad` (`id_especialidad`),
+  ADD KEY `id_nacionalidad` (`id_nacionalidad`);
 
 --
 -- Indices de la tabla `especialidad`
@@ -163,7 +187,8 @@ ALTER TABLE `especialidad`
 -- Indices de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_doctor` (`id_doctor`);
 
 --
 -- Indices de la tabla `nacionalidad`
@@ -175,17 +200,26 @@ ALTER TABLE `nacionalidad`
 -- Indices de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `cedula` (`cedula`),
+  ADD KEY `id_seguro` (`id_seguro`),
+  ADD KEY `id_nacionalidad` (`id_nacionalidad`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indices de la tabla `seguros`
 --
-ALTER TABLE `usuarios`
+ALTER TABLE `seguros`
   ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `citas`
@@ -224,10 +258,41 @@ ALTER TABLE `pacientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de la tabla `seguros`
 --
-ALTER TABLE `usuarios`
+ALTER TABLE `seguros`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`id_doctor`) REFERENCES `doctores` (`id`),
+  ADD CONSTRAINT `citas_ibfk_2` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id`);
+
+--
+-- Filtros para la tabla `doctores`
+--
+ALTER TABLE `doctores`
+  ADD CONSTRAINT `doctores_ibfk_1` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id`),
+  ADD CONSTRAINT `doctores_ibfk_2` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidad` (`id`);
+
+--
+-- Filtros para la tabla `horarios`
+--
+ALTER TABLE `horarios`
+  ADD CONSTRAINT `horarios_ibfk_1` FOREIGN KEY (`id_doctor`) REFERENCES `doctores` (`id`);
+
+--
+-- Filtros para la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD CONSTRAINT `pacientes_ibfk_1` FOREIGN KEY (`id_seguro`) REFERENCES `seguros` (`id`),
+  ADD CONSTRAINT `pacientes_ibfk_2` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidad` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -11,12 +11,12 @@ export const personaSchema = Joi.object().keys({
   condition: Joi.object().keys({
     nombres: requiredString,
     apellidos: requiredString,
-    sexo: requiredString,
-    doc_identidad: requiredString,
+    // sexo: requiredString,
+    // doc_identidad: requiredString,
     usuario: requiredString,
-    fechaNacimiento: requiredString,
-    usuario_insercion: requiredString,
-    pass: requiredString,
+    // fechaNacimiento: requiredString,
+    // usuario_insercion: requiredString,
+    clave: requiredString,
   }),
 })
 export const cambiarContraSchema = Joi.object().keys({

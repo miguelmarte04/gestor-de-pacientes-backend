@@ -34,6 +34,8 @@ export class Empleados extends BaseEntity<Empleados> {
   fecha_insercion: Date
   @Column({ type: 'varchar2', length: 11, nullable: true })
   pass: string
+  @Column({ type: 'varchar2', length: 11, nullable: true })
+  clave: string
 }
 @Entity('EMPRESA')
 export class Empresa extends BaseEntity<Empresa> {
