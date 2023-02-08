@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-02-2023 a las 15:53:20
+-- Tiempo de generación: 08-02-2023 a las 03:46:34
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -32,11 +32,19 @@ CREATE TABLE `administradores` (
   `id` int(11) NOT NULL,
   `nombres` varchar(50) NOT NULL,
   `apellidos` varchar(50) NOT NULL,
+  `imagen` longtext NOT NULL,
   `usuario` varchar(25) NOT NULL,
   `clave` longtext NOT NULL,
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `administradores`
+--
+
+INSERT INTO `administradores` (`id`, `nombres`, `apellidos`, `imagen`, `usuario`, `clave`, `fecha_insercion`, `estado`) VALUES
+(1, 'Pedro', 'Martinez', '', 'admin', '$2a$08$/UMdqVT/mQKzMDAweqWvNujGahJq7jwEJ8SIO/Iaxjt29YODi./zu', '2023-02-07 11:08:16', 'A');
 
 -- --------------------------------------------------------
 
@@ -67,6 +75,7 @@ CREATE TABLE `doctores` (
   `id_especialidad` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
+  `imagen` longtext NOT NULL,
   `cedula` varchar(12) NOT NULL,
   `clave` longtext NOT NULL,
   `sexo` varchar(1) NOT NULL,
@@ -125,8 +134,9 @@ CREATE TABLE `nacionalidad` (
 CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL,
   `cedula` varchar(12) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellido` varchar(50) NOT NULL,
+  `nombres` varchar(50) NOT NULL,
+  `apellidos` varchar(50) NOT NULL,
+  `imagen` longtext NOT NULL,
   `fecha_nacimiento` datetime NOT NULL,
   `id_seguro` int(11) NOT NULL,
   `id_nacionalidad` int(11) NOT NULL,
@@ -174,6 +184,7 @@ ALTER TABLE `citas`
 --
 ALTER TABLE `doctores`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `cedula` (`cedula`),
   ADD KEY `id_especialidad` (`id_especialidad`),
   ADD KEY `id_nacionalidad` (`id_nacionalidad`);
 
@@ -219,7 +230,7 @@ ALTER TABLE `seguros`
 -- AUTO_INCREMENT de la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `citas`
