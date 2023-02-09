@@ -74,7 +74,7 @@ exports.getNivelAcademico = async (req: Request, res: Response) => {
   }
 }
 
-exports.getDepartamentos = async (req: Request, res: Response) => {
+exports.getConsultas = async (req: Request, res: Response) => {
   try {
     conexion.query(
       'SELECT D.*,E.nombres,E.apellidos,E.doc_identidad FROM departamentos D,empleados E WHERE d.id_empleado_encargado = E.id',
@@ -90,11 +90,11 @@ exports.getDepartamentos = async (req: Request, res: Response) => {
     res.status(400).send({ message: error })
   }
 }
-exports.registerDepartamentos = async (req: Request, res: Response) => {
+exports.registerConsultas = async (req: Request, res: Response) => {
   const { departamento, usuario_insercion, id_empleado_encargado } =
     await new Departamentos(req.body.condition)
   conexion.query(
-    'INSERT INTO departamentos SET ?',
+    'INSERT INTO citas SET ?',
     {
       departamento: departamento,
       fecha_insercion: new Date(),
@@ -104,21 +104,21 @@ exports.registerDepartamentos = async (req: Request, res: Response) => {
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({
-          message: 'Error registrando Departamento',
+          message: 'Error registrando Consulta',
           error: err?.sqlMessage,
         })
       } else {
-        res.status(200).send({ message: 'Departamento registrado con exito' })
+        res.status(200).send({ message: 'Consulta registrado con exito' })
       }
     }
   )
 }
-exports.updateDepartamentos = async (req: Request, res: Response) => {
+exports.updateConsultas = async (req: Request, res: Response) => {
   const { id, departamento, usuario_insercion, id_empleado_encargado, estado } =
     await new Departamentos(req.body.condition)
 
   conexion.query(
-    'UPDATE departamentos SET departamento = ?,id_empleado_encargado = ?, usuario_insercion = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
+    'UPDATE citas SET departamento = ?,id_empleado_encargado = ?, usuario_insercion = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
     [
       departamento,
       id_empleado_encargado,
@@ -130,11 +130,11 @@ exports.updateDepartamentos = async (req: Request, res: Response) => {
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({
-          message: 'Error Actualizando Departamento',
+          message: 'Error Actualizando Consulta',
           error: err?.sqlMessage,
         })
       } else {
-        res.status(200).send({ message: 'Departamento Actualizado con exito' })
+        res.status(200).send({ message: 'Consulta Actualizado con exito' })
       }
     }
   )

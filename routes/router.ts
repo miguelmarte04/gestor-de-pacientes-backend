@@ -114,16 +114,16 @@ router.put(
 router.post('/login', authController.login)
 router.post('/estado_civil', generalController.getCivilState)
 router.post('/nivel_academico', generalController.getNivelAcademico)
-router.post('/departamentos', generalController.getDepartamentos)
+router.post('/consultas', generalController.getConsultas)
 router.post(
-  '/departamentos/departamento',
+  '/consultas/consulta',
   validateSchema(registerDepartamento),
-  generalController.registerDepartamentos
+  generalController.registerConsultas
 )
 router.put(
-  '/departamentos/departamento',
+  '/consultas/consulta',
   validateSchema(updateDepartamento),
-  generalController.updateDepartamentos
+  generalController.updateConsultas
 )
 router.post('/tipos_sangre', generalController.getBloodType)
 router.post('/paises', generalController.getPaises)
