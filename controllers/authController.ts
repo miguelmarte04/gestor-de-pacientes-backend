@@ -88,7 +88,7 @@ exports.login = async (req: Request, res: Response) => {
               .send({ message: 'Usuario o contraseña incorrectos' })
           } else {
             try {
-              const { id, usuario, nombres, apellidos } = results[0]
+              const { id, usuario, nombres, apellidos, imagen } = results[0]
               const token = jwt.sign({ id: id }, process.env.JWR_SECRETO, {
                 expiresIn: process.env.JWT_TIEMPO_EXPIRA,
               })
@@ -107,6 +107,7 @@ exports.login = async (req: Request, res: Response) => {
                   nombres: nombres,
                   privilegios: 1,
                   apellidos: apellidos,
+                  imagen: imagen,
                   id: id,
                   sessionCookie: {
                     token: token,
