@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-02-2023 a las 03:34:39
+-- Tiempo de generación: 10-02-2023 a las 03:31:47
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -63,6 +63,13 @@ CREATE TABLE `citas` (
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `citas`
+--
+
+INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `asunto`, `inicio`, `fin`, `fecha_insercion`, `estado`) VALUES
+(1, 1, 1, 'asdsad', '2023-02-08 00:00:00', '2023-02-09 00:00:00', '2023-02-09 00:00:00', 'A');
+
 -- --------------------------------------------------------
 
 --
@@ -75,7 +82,7 @@ CREATE TABLE `doctores` (
   `id_especialidad` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
-  `imagen` longtext NOT NULL,
+  `imagen` longtext DEFAULT NULL,
   `cedula` varchar(12) NOT NULL,
   `clave` longtext NOT NULL,
   `sexo` varchar(1) NOT NULL,
@@ -85,6 +92,13 @@ CREATE TABLE `doctores` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `doctores`
+--
+
+INSERT INTO `doctores` (`id`, `id_nacionalidad`, `id_especialidad`, `nombre`, `apellido`, `imagen`, `cedula`, `clave`, `sexo`, `telefono`, `fecha_nacimiento`, `correo`, `fecha_insercion`, `estado`) VALUES
+(1, 1, 1, 'Pedro Antonio', 'Suarez', NULL, '04700051515', 'dasd', 'M', '8298101026', '2023-02-09 00:00:00', 'suarez@gmail.com', '2023-02-09 00:00:00', 'A');
 
 -- --------------------------------------------------------
 
@@ -98,6 +112,13 @@ CREATE TABLE `especialidad` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `especialidad`
+--
+
+INSERT INTO `especialidad` (`id`, `nombre`, `fecha_insercion`, `estado`) VALUES
+(1, 'Alergiologia', '2023-02-09 00:00:00', 'A');
 
 -- --------------------------------------------------------
 
@@ -125,6 +146,13 @@ CREATE TABLE `nacionalidad` (
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `nacionalidad`
+--
+
+INSERT INTO `nacionalidad` (`id`, `nombre`, `estado`) VALUES
+(1, 'Dominicana', 'A');
+
 -- --------------------------------------------------------
 
 --
@@ -136,7 +164,7 @@ CREATE TABLE `pacientes` (
   `cedula` varchar(12) NOT NULL,
   `nombres` varchar(50) NOT NULL,
   `apellidos` varchar(50) NOT NULL,
-  `imagen` longtext NOT NULL,
+  `imagen` longtext DEFAULT NULL,
   `fecha_nacimiento` datetime NOT NULL,
   `id_seguro` int(11) NOT NULL,
   `id_nacionalidad` int(11) NOT NULL,
@@ -147,6 +175,13 @@ CREATE TABLE `pacientes` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`id`, `cedula`, `nombres`, `apellidos`, `imagen`, `fecha_nacimiento`, `id_seguro`, `id_nacionalidad`, `telefono`, `sexo`, `email`, `clave`, `fecha_insercion`, `estado`) VALUES
+(1, '402222222121', 'prueba', 'pedro', '', '2022-03-10 00:00:00', 1, 1, '8298101026', 'M', 'prueba@gmail.com', 'aasd', '2023-02-09 00:00:00', 'A');
 
 -- --------------------------------------------------------
 
@@ -160,6 +195,13 @@ CREATE TABLE `seguros` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `seguros`
+--
+
+INSERT INTO `seguros` (`id`, `nombre`, `fecha_insercion`, `estado`) VALUES
+(1, 'Universal', '2023-02-09 00:00:00', 'A');
 
 --
 -- Índices para tablas volcadas
@@ -212,9 +254,9 @@ ALTER TABLE `nacionalidad`
 --
 ALTER TABLE `pacientes`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cedula` (`cedula`),
   ADD KEY `id_seguro` (`id_seguro`),
   ADD KEY `id_nacionalidad` (`id_nacionalidad`);
+ALTER TABLE `pacientes` ADD FULLTEXT KEY `nombres` (`cedula`,`nombres`,`apellidos`);
 
 --
 -- Indices de la tabla `seguros`
@@ -236,19 +278,19 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
 ALTER TABLE `especialidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `horarios`
@@ -260,19 +302,19 @@ ALTER TABLE `horarios`
 -- AUTO_INCREMENT de la tabla `nacionalidad`
 --
 ALTER TABLE `nacionalidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `seguros`
 --
 ALTER TABLE `seguros`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas

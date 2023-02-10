@@ -77,7 +77,7 @@ exports.getNivelAcademico = async (req: Request, res: Response) => {
 exports.getConsultas = async (req: Request, res: Response) => {
   try {
     conexion.query(
-      'SELECT D.*,E.nombres,E.apellidos,E.doc_identidad FROM departamentos D,empleados E WHERE d.id_empleado_encargado = E.id',
+      'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })

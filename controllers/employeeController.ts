@@ -37,10 +37,9 @@ exports.getEmpleados = async (req: Request, res: Response) => {
     try {
       conexion.query(
         search !== ' '
-          ? `SELECT E.*,C.cargo FROM empleados E,cargos C WHERE E.id_cargo = C.id AND MATCH(nombres,apellidos,doc_identidad) AGAINST(?)`
-          : `SELECT E.*,C.cargo,D.departamento,EC.estado_civil FROM empleados E LEFT JOIN cargos C ON E.id_cargo = C.id LEFT JOIN departamentos D ON E.id_departamento = D.id LEFT JOIN estado_civil EC ON E.id_estado_civil = EC.id
-
-          UNION SELECT E.*,C.cargo,D.departamento,EC.estado_civil FROM empleados E RIGHT JOIN cargos C ON E.id_cargo = C.id RIGHT JOIN departamentos D ON E.id_departamento = D.id RIGHT JOIN estado_civil EC ON E.id_estado_civil = EC.id`,
+          ? `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes P,nacionalidad N,seguros S WHERE P.id_nacionalidad = N.id AND P.id_seguro = S.id AND MATCH(apellidos,nombres,cedula) AGAINST('prueba')`
+          : `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p LEFT JOIN nacionalidad N ON P.id_nacionalidad = N.id LEFT JOIN seguros S ON P.id_seguro = S.id
+          UNION SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p RIGHT JOIN nacionalidad N ON P.id_nacionalidad = N.id RIGHT JOIN seguros S ON P.id_seguro = S.id`,
         [search],
         (err: AnyType, results: AnyType) => {
           if (results?.length === 0 || results === undefined) {
@@ -65,8 +64,9 @@ exports.getEmpleados = async (req: Request, res: Response) => {
     try {
       conexion.query(
         search !== ' '
-          ? `SELECT E.*,C.cargo FROM empleados E LEFT JOIN cargos C ON E.id_cargo = C.id AND MATCH(nombres,apellidos,doc_identidad ) AGAINST(?) UNION SELECT E.*,C.cargo FROM empleados E RIGHT JOIN cargos C ON E.id_cargo = C.id AND MATCH(nombres,apellidos,doc_identidad ) AGAINST(?)`
-          : `SELECT E.*,C.cargo FROM empleados E LEFT JOIN cargos C ON E.id_cargo = C.id UNION SELECT E.*,C.cargo FROM empleados E RIGHT JOIN cargos C ON E.id_cargo = C.id`,
+          ? `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p LEFT JOIN nacionalidad N ON P.id_nacionalidad = N.id LEFT JOIN seguros S ON P.id_seguro = S.id AND MATCH(nombres,apellidos,cedula ) AGAINST(?) UNION SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p RIGHT JOIN nacionalidad N ON P.id_nacionalidad = N.id RIGHT JOIN seguros S ON P.id_seguro = S.id AND MATCH(nombres,apellidos,cedula ) AGAINST(?)`
+          : `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p LEFT JOIN nacionalidad N ON P.id_nacionalidad = N.id LEFT JOIN seguros S ON P.id_seguro = S.id
+          UNION SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p RIGHT JOIN nacionalidad N ON P.id_nacionalidad = N.id RIGHT JOIN seguros S ON P.id_seguro = S.id`,
         [search, search],
         (err: AnyType, results: AnyType) => {
           if (results?.length === 0) {
