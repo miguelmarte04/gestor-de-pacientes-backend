@@ -37,7 +37,7 @@ exports.getEmpleados = async (req: Request, res: Response) => {
     try {
       conexion.query(
         search !== ' '
-          ? `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes P,nacionalidad N,seguros S WHERE P.id_nacionalidad = N.id AND P.id_seguro = S.id AND MATCH(apellidos,nombres,cedula) AGAINST('prueba')`
+          ? `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes P,nacionalidad N,seguros S WHERE P.id_nacionalidad = N.id AND P.id_seguro = S.id AND MATCH(apellidos,nombres,cedula) AGAINST(?)`
           : `SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p LEFT JOIN nacionalidad N ON P.id_nacionalidad = N.id LEFT JOIN seguros S ON P.id_seguro = S.id
           UNION SELECT P.*,N.nombre nacionalidad,S.nombre seguro FROM pacientes p RIGHT JOIN nacionalidad N ON P.id_nacionalidad = N.id RIGHT JOIN seguros S ON P.id_seguro = S.id`,
         [search],
