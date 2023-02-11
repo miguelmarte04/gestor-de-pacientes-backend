@@ -1,12 +1,7 @@
 import { Request, Response } from 'express'
 import fetch from 'node-fetch'
 import { DbError, unirArrayEnObjeto } from '../constants/general'
-import {
-  Personas,
-  provincias,
-  parametros,
-  Departamentos,
-} from '../entity/general'
+import { Personas, provincias, parametros, Consultas } from '../entity/general'
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { Empresa } from '../entity/auth'
@@ -91,15 +86,18 @@ exports.getConsultas = async (req: Request, res: Response) => {
   }
 }
 exports.registerConsultas = async (req: Request, res: Response) => {
-  const { departamento, usuario_insercion, id_empleado_encargado } =
-    await new Departamentos(req.body.condition)
+  const { id_paciente, id_doctor, asunto, fin, inicio } = await new Consultas(
+    req.body.condition
+  )
   conexion.query(
     'INSERT INTO citas SET ?',
     {
-      departamento: departamento,
+      id_paciente,
+      id_doctor,
+      asunto,
+      inicio: new Date(inicio),
+      fin: new Date(fin),
       fecha_insercion: new Date(),
-      usuario_insercion: usuario_insercion,
-      id_empleado_encargado: id_empleado_encargado,
     },
     (err: AnyType, results: Response) => {
       if (!results) {
@@ -114,15 +112,17 @@ exports.registerConsultas = async (req: Request, res: Response) => {
   )
 }
 exports.updateConsultas = async (req: Request, res: Response) => {
-  const { id, departamento, usuario_insercion, id_empleado_encargado, estado } =
-    await new Departamentos(req.body.condition)
+  const { id, id_paciente, id_doctor, asunto, fin, inicio, estado } =
+    await new Consultas(req.body.condition)
 
   conexion.query(
-    'UPDATE citas SET departamento = ?,id_empleado_encargado = ?, usuario_insercion = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
+    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, inicio = ?, fin = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
     [
-      departamento,
-      id_empleado_encargado,
-      usuario_insercion,
+      id_paciente,
+      id_doctor,
+      asunto,
+      new Date(inicio),
+      new Date(fin),
       new Date(),
       estado,
       id,
@@ -185,10 +185,10 @@ exports.getInfoEmpresa = async (req: Request, res: Response) => {
     res.status(400).send({ message: error })
   }
 }
-exports.getJornadaTrabajo = async (req: Request, res: Response) => {
+exports.getDoctores = async (req: Request, res: Response) => {
   try {
     conexion.query(
-      'SELECT * FROM jornada_trabajo',
+      'SELECT * FROM doctores',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })

@@ -51,21 +51,22 @@ export class getTiposPermisos extends BaseEntity<getTiposPermisos> {
   @Column({ type: 'varchar', nullable: true })
   estado: string
 }
-@Entity('DEPARTAMENTOS')
-export class Departamentos extends BaseEntity<Departamentos> {
+@Entity('CONSULTAS')
+export class Consultas extends BaseEntity<Consultas> {
   @PrimaryGeneratedColumn()
   id: number
-
-  @Column({ type: 'varchar2', length: 100, nullable: false })
-  departamento: string
   @Column({ type: 'number', nullable: false })
-  id_empleado_encargado: number
-  @Column({ type: 'varchar2', length: 100, nullable: true })
-  usuario_insercion: string
-
+  id_paciente: number
+  @Column({ type: 'number', nullable: false })
+  id_doctor: number
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  asunto: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  inicio: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  fin: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
   fecha_insercion: string
-
   @Column({ type: 'varchar2', length: 1, nullable: true })
   estado: string
 }

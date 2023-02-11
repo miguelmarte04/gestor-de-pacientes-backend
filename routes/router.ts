@@ -40,7 +40,7 @@ import {
   registerBusinessSchema,
   registerConfiguracionesSchema,
   RegisterContactoEmergencia,
-  registerDepartamento,
+  registerConsultas,
   registerDirecciones,
   RegisterDirecciones,
   registerDocumentosEmpleados,
@@ -96,6 +96,7 @@ import {
   UpdateVacaciones,
   updateVacantes,
   updateWorkingDaySchema,
+  updateConsultas,
 } from '../validation/validationORM'
 const router = express.Router()
 const authController = require('../controllers/authController')
@@ -117,12 +118,12 @@ router.post('/nivel_academico', generalController.getNivelAcademico)
 router.post('/consultas', generalController.getConsultas)
 router.post(
   '/consultas/consulta',
-  validateSchema(registerDepartamento),
+  validateSchema(registerConsultas),
   generalController.registerConsultas
 )
 router.put(
   '/consultas/consulta',
-  validateSchema(updateDepartamento),
+  validateSchema(updateConsultas),
   generalController.updateConsultas
 )
 router.post('/tipos_sangre', generalController.getBloodType)
@@ -130,7 +131,7 @@ router.post('/paises', generalController.getPaises)
 router.post('/provincias', generalController.getProvincias)
 router.post('/nomina', generalController.getNomina)
 router.post('/tipo_documentos', generalController.getTipoDocumentos)
-router.post('/jornada_trabajo', generalController.getJornadaTrabajo)
+router.post('/doctores', generalController.getDoctores)
 router.post('/parentesco', generalController.getParentesco)
 router.post('/cargo', generalController.getCargo)
 router.post('/tipos_telefono', generalController.getTipoTelefono)
@@ -615,12 +616,12 @@ router.put(
   configurationsController.updateTipoDocumento
 )
 router.post(
-  '/jornadas_trabajo/jornada_trabajo',
+  '/doctores/doctor',
   validateSchema(registerWorkingDaySchema),
   configurationsController.registerWorkingDay
 )
 router.put(
-  '/jornadas_trabajo/jornada_trabajo',
+  '/doctores/doctor',
   validateSchema(updateWorkingDaySchema),
   configurationsController.updateWorkingDay
 )

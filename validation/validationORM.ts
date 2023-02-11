@@ -699,11 +699,24 @@ export const updateDepartamento = Joi.object().keys({
     estado: requiredString,
   }),
 })
-export const registerDepartamento = Joi.object().keys({
+export const updateConsultas = Joi.object().keys({
   condition: Joi.object().keys({
-    departamento: requiredString,
-    id_empleado_encargado: requirednumber,
-    usuario_insercion: requiredString,
+    id: requirednumber,
+    id_paciente: requirednumber,
+    id_doctor: requirednumber,
+    asunto: requiredString,
+    inicio: requiredString,
+    fin: requiredString,
+    estado: requiredString,
+  }),
+})
+export const registerConsultas = Joi.object().keys({
+  condition: Joi.object().keys({
+    id_paciente: requirednumber,
+    id_doctor: requirednumber,
+    asunto: requiredString,
+    inicio: requiredString,
+    fin: requiredString,
   }),
 })
 export const registerHoliday = Joi.object().keys({
