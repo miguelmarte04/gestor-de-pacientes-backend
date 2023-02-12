@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-02-2023 a las 03:31:47
+-- Tiempo de generación: 12-02-2023 a las 16:45:49
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -68,7 +68,8 @@ CREATE TABLE `citas` (
 --
 
 INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `asunto`, `inicio`, `fin`, `fecha_insercion`, `estado`) VALUES
-(1, 1, 1, 'asdsad', '2023-02-08 00:00:00', '2023-02-09 00:00:00', '2023-02-09 00:00:00', 'A');
+(1, 1, 1, 'asdsad2', '2023-02-08 00:00:00', '2023-02-09 00:00:00', '2023-02-11 20:39:41', 'A'),
+(2, 1, 1, 'prueba1', '2023-02-20 20:00:00', '2023-03-14 20:00:00', '2023-02-11 20:46:51', 'A');
 
 -- --------------------------------------------------------
 
@@ -98,7 +99,8 @@ CREATE TABLE `doctores` (
 --
 
 INSERT INTO `doctores` (`id`, `id_nacionalidad`, `id_especialidad`, `nombre`, `apellido`, `imagen`, `cedula`, `clave`, `sexo`, `telefono`, `fecha_nacimiento`, `correo`, `fecha_insercion`, `estado`) VALUES
-(1, 1, 1, 'Pedro Antonio', 'Suarez', NULL, '04700051515', 'dasd', 'M', '8298101026', '2023-02-09 00:00:00', 'suarez@gmail.com', '2023-02-09 00:00:00', 'A');
+(1, 1, 1, 'Pedro Antonio', 'Suarez', NULL, '04700051515', 'dasd', 'M', '8298101026', '2023-02-09 00:00:00', 'suarez@gmail.com', '2023-02-09 00:00:00', 'A'),
+(2, 1, 1, 'asdsad', 'asdsad', NULL, '10212121212', '$2a$08$HO.Vk1X1j.9BFbyp5s7De.zXn.Ayyapz3dmyZENIbqnbo5YSNRqUy', 'M', '(151)5121212', '2023-02-10 05:23:37', 'adasdsad@gmail.com', '2023-02-12 01:24:42', 'A');
 
 -- --------------------------------------------------------
 
@@ -118,7 +120,8 @@ CREATE TABLE `especialidad` (
 --
 
 INSERT INTO `especialidad` (`id`, `nombre`, `fecha_insercion`, `estado`) VALUES
-(1, 'Alergiologia', '2023-02-09 00:00:00', 'A');
+(1, 'Alergiologia', '2023-02-09 00:00:00', 'A'),
+(2, 'dasdsadsadsadasd', '2023-02-12 11:42:29', 'I');
 
 -- --------------------------------------------------------
 
@@ -129,7 +132,7 @@ INSERT INTO `especialidad` (`id`, `nombre`, `fecha_insercion`, `estado`) VALUES
 CREATE TABLE `horarios` (
   `id` int(11) NOT NULL,
   `id_doctor` int(11) NOT NULL,
-  `hora` varchar(50) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -181,7 +184,8 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `cedula`, `nombres`, `apellidos`, `imagen`, `fecha_nacimiento`, `id_seguro`, `id_nacionalidad`, `telefono`, `sexo`, `email`, `clave`, `fecha_insercion`, `estado`) VALUES
-(1, '402222222121', 'prueba', 'pedro', '', '2022-03-10 00:00:00', 1, 1, '8298101026', 'M', 'prueba@gmail.com', 'aasd', '2023-02-09 00:00:00', 'A');
+(1, '40212048801', 'prueba', 'pedro', '', '2022-03-10 00:00:00', 1, 1, '8298101026', 'M', 'prueba@gmail.com', 'aasd', '2023-02-09 00:00:00', 'A'),
+(2, '15151521521', 'asdsad', 'asdsad', NULL, '2023-02-07 04:16:05', 1, 1, '(123)2323232', 'M', 'sdasd@gmail.com', '$2a$08$lsI0kbEsEZOcsE.tPdJ1z.M0ikCGXzVBrGPzfdVkIK4ocQPtvUGVe', '2023-02-12 00:35:12', 'A');
 
 -- --------------------------------------------------------
 
@@ -278,19 +282,19 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
 --
 ALTER TABLE `especialidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `horarios`
@@ -308,7 +312,7 @@ ALTER TABLE `nacionalidad`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `seguros`

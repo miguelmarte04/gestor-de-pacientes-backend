@@ -1,5 +1,11 @@
 import { Request, Response } from 'express'
-import { Consultas, Doctor, Paciente } from '../entity/general'
+import {
+  Consultas,
+  Doctor,
+  Especialidades,
+  Horarios,
+  Paciente,
+} from '../entity/general'
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
@@ -294,6 +300,101 @@ exports.getEspecialidades = async (req: Request, res: Response) => {
   } catch (error: AnyType) {
     res.status(400).send({ message: error })
   }
+}
+exports.registerEspecialidades = async (req: Request, res: Response) => {
+  const { nombre } = await new Especialidades(req.body.condition)
+  conexion.query(
+    'INSERT INTO especialidad SET ?',
+    {
+      nombre,
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Especialidad',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Especialidad registrada con exito' })
+      }
+    }
+  )
+}
+exports.updateEspecialidades = async (req: Request, res: Response) => {
+  const { nombre, estado, id } = await new Especialidades(req.body.condition)
+
+  conexion.query(
+    'UPDATE especialidad SET nombre = ?,estado = ? WHERE id = ?',
+    [nombre, estado, id],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Especialidad',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Especialidad Actualizada con exito' })
+      }
+    }
+  )
+}
+exports.getHorarios = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT H.*,D.nombre nombre_doctor,D.apellido apellido_doctor FROM horarios H,doctores D WHERE H.id_doctor = D.id',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerHorarios = async (req: Request, res: Response) => {
+  const { nombre, id_doctor } = await new Horarios(req.body.condition)
+  conexion.query(
+    'INSERT INTO horarios SET ?',
+    {
+      nombre,
+      id_doctor,
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Horario',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Horario registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateHorarios = async (req: Request, res: Response) => {
+  const { nombre, id_doctor, estado, id } = await new Horarios(
+    req.body.condition
+  )
+
+  conexion.query(
+    'UPDATE horarios SET nombre = ?,id_doctor = ?,estado = ? WHERE id = ?',
+    [nombre, id_doctor, estado, id],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Horario',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Horario Actualizado con exito' })
+      }
+    }
+  )
 }
 
 exports.getNacionalidades = async (req: Request, res: Response) => {

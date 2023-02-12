@@ -5,9 +5,13 @@ import {
   personaSchema,
   registerConsultas,
   registerDoctor,
+  registerEspecialidades,
+  registerHorarios,
   registerPaciente,
   updateConsultas,
   updateDoctor,
+  updateEspecialidades,
+  updateHorarios,
   updatePaciente,
 } from '../validation/validationORM'
 const router = express.Router()
@@ -57,5 +61,26 @@ router.put(
   generalController.updateDoctor
 )
 router.post('/especialidades', generalController.getEspecialidades)
+router.post(
+  '/especialidades/especialidad',
+  validateSchema(registerEspecialidades),
+  generalController.registerEspecialidades
+)
+router.put(
+  '/especialidades/especialidad',
+  validateSchema(updateEspecialidades),
+  generalController.updateEspecialidades
+)
+router.post('/horarios', generalController.getHorarios)
+router.post(
+  '/horarios/horario',
+  validateSchema(registerHorarios),
+  generalController.registerHorarios
+)
+router.put(
+  '/horarios/horario',
+  validateSchema(updateHorarios),
+  generalController.updateHorarios
+)
 router.get('/logout', authController.logout)
 module.exports = router

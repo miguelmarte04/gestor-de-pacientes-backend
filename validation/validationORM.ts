@@ -110,6 +110,32 @@ export const registerDoctor = Joi.object().keys({
     clave: requiredString,
   }),
 })
+export const updateEspecialidades = Joi.object().keys({
+  condition: Joi.object().keys({
+    id: requirednumber,
+    nombre: requiredString,
+    estado: requiredString,
+  }),
+})
+export const registerEspecialidades = Joi.object().keys({
+  condition: Joi.object().keys({
+    nombre: requiredString,
+  }),
+})
+export const updateHorarios = Joi.object().keys({
+  condition: Joi.object().keys({
+    id: requirednumber,
+    id_doctor: requirednumber,
+    nombre: requiredString,
+    estado: requiredString,
+  }),
+})
+export const registerHorarios = Joi.object().keys({
+  condition: Joi.object().keys({
+    nombre: requiredString,
+    id_doctor: requirednumber,
+  }),
+})
 
 export const searchEmployee = Joi.object().keys({
   condition: Joi.object().keys({

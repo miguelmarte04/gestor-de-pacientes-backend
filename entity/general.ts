@@ -81,3 +81,27 @@ export class Doctor extends BaseEntity<Doctor> {
   @Column({ type: 'varchar2', length: 1, nullable: true })
   estado: string
 }
+@Entity('ESPECIALIDADES')
+export class Especialidades extends BaseEntity<Especialidades> {
+  @PrimaryGeneratedColumn()
+  id: number
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  nombre: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  fecha_insercion: string
+  @Column({ type: 'varchar2', length: 1, nullable: true })
+  estado: string
+}
+@Entity('HORARIOS')
+export class Horarios extends BaseEntity<Horarios> {
+  @PrimaryGeneratedColumn()
+  id: number
+  @Column({ type: 'number', nullable: false })
+  id_doctor: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  nombre: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  fecha_insercion: string
+  @Column({ type: 'varchar2', length: 1, nullable: true })
+  estado: string
+}
