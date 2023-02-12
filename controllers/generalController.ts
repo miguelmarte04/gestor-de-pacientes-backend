@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Consultas, Paciente } from '../entity/general'
+import { Consultas, Doctor, Paciente } from '../entity/general'
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
@@ -180,7 +180,109 @@ exports.updatePaciente = async (req: Request, res: Response) => {
 exports.getDoctores = async (req: Request, res: Response) => {
   try {
     conexion.query(
-      'SELECT * FROM doctores',
+      'SELECT D.*,N.nombre nacionalidad,E.nombre especialidad FROM doctores D, nacionalidad N,especialidad E WHERE D.id_nacionalidad = N.id AND D.id_especialidad = N.id',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerDoctor = async (req: Request, res: Response) => {
+  const {
+    cedula,
+    nombre,
+    apellido,
+    fecha_nacimiento,
+    id_especialidad,
+    id_nacionalidad,
+    telefono,
+    sexo,
+    correo,
+    clave,
+    imagen,
+  } = await new Doctor(req.body.condition)
+  conexion.query(
+    'INSERT INTO doctores SET ?',
+    {
+      cedula,
+      nombre,
+      apellido,
+      fecha_nacimiento,
+      id_especialidad,
+      id_nacionalidad,
+      imagen,
+      telefono,
+      sexo,
+      correo,
+      clave: await bcryptjs.hash(clave, 8),
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Doctor',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Doctor registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateDoctor = async (req: Request, res: Response) => {
+  const {
+    cedula,
+    nombre,
+    apellido,
+    fecha_nacimiento,
+    id_especialidad,
+    id_nacionalidad,
+    telefono,
+    sexo,
+    imagen,
+    correo,
+    estado,
+    id,
+  } = await new Doctor(req.body.condition)
+
+  conexion.query(
+    'UPDATE doctores SET cedula = ?,nombre = ?, apellido = ?, fecha_nacimiento = ?,id_especialidad = ?,id_nacionalidad = ?,telefono = ?, sexo = ?, correo = ?, estado = ?,imagen = ? WHERE id = ?',
+    [
+      cedula,
+      nombre,
+      apellido,
+      new Date(fecha_nacimiento),
+      id_especialidad,
+      id_nacionalidad,
+      telefono,
+      sexo,
+      correo,
+      estado,
+      imagen,
+      id,
+    ],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Doctor',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Doctor Actualizado con exito' })
+      }
+    }
+  )
+}
+exports.getEspecialidades = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM especialidad',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
@@ -194,10 +296,26 @@ exports.getDoctores = async (req: Request, res: Response) => {
   }
 }
 
-exports.getPaises = async (req: Request, res: Response) => {
+exports.getNacionalidades = async (req: Request, res: Response) => {
   try {
     conexion.query(
       'SELECT * FROM nacionalidad',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({ data: results })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getSeguros = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM seguros',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })

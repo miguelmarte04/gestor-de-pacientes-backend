@@ -59,7 +59,7 @@ export const updatePaciente = Joi.object().keys({
     telefono: requiredString,
     sexo: requiredString,
     email: requiredString,
-    clave: requiredString,
+    // clave: requiredString,
     estado: requiredString,
   }),
 })
@@ -75,6 +75,38 @@ export const registerPaciente = Joi.object().keys({
     imagen: joiString,
     sexo: requiredString,
     email: requiredString,
+    clave: requiredString,
+  }),
+})
+export const updateDoctor = Joi.object().keys({
+  condition: Joi.object().keys({
+    id: requirednumber,
+    cedula: requiredString,
+    nombre: requiredString,
+    apellido: requiredString,
+    fecha_nacimiento: requiredString,
+    id_especialidad: requirednumber,
+    imagen: joiString,
+    id_nacionalidad: requirednumber,
+    telefono: requiredString,
+    sexo: requiredString,
+    correo: requiredString,
+    // clave: requiredString,
+    estado: requiredString,
+  }),
+})
+export const registerDoctor = Joi.object().keys({
+  condition: Joi.object().keys({
+    cedula: requiredString,
+    nombre: requiredString,
+    apellido: requiredString,
+    fecha_nacimiento: requiredString,
+    id_especialidad: requirednumber,
+    id_nacionalidad: requirednumber,
+    telefono: requiredString,
+    imagen: joiString,
+    sexo: requiredString,
+    correo: requiredString,
     clave: requiredString,
   }),
 })

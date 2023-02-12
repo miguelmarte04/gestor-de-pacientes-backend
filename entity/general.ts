@@ -50,3 +50,34 @@ export class Paciente extends BaseEntity<Paciente> {
   @Column({ type: 'varchar2', length: 1, nullable: true })
   estado: string
 }
+@Entity('DOCTOR')
+export class Doctor extends BaseEntity<Doctor> {
+  @PrimaryGeneratedColumn()
+  id: number
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  cedula: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  nombre: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  apellido: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  imagen: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  fecha_nacimiento: string
+  @Column({ type: 'number', nullable: false })
+  id_especialidad: number
+  @Column({ type: 'number', nullable: false })
+  id_nacionalidad: number
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  telefono: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  sexo: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  correo: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  clave: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  fecha_insercion: string
+  @Column({ type: 'varchar2', length: 1, nullable: true })
+  estado: string
+}
