@@ -4,7 +4,9 @@ import {
   cambiarContraSchema,
   personaSchema,
   registerConsultas,
+  registerPaciente,
   updateConsultas,
+  updatePaciente,
 } from '../validation/validationORM'
 const router = express.Router()
 const authController = require('../controllers/authController')
@@ -27,6 +29,17 @@ router.put(
   '/consultas/consulta',
   validateSchema(updateConsultas),
   generalController.updateConsultas
+)
+router.post('/pacientes', generalController.getPaciente)
+router.post(
+  '/pacientes/paciente',
+  validateSchema(registerPaciente),
+  generalController.registerPaciente
+)
+router.put(
+  '/pacientes/paciente',
+  validateSchema(updatePaciente),
+  generalController.updatePaciente
 )
 router.post('/paises', generalController.getPaises)
 router.post('/doctores', generalController.getDoctores)
