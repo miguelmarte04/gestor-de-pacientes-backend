@@ -12,17 +12,22 @@ import { deleteKeys } from '../helpers/general'
 export type AnyType<T = any> = T
 const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
+  const { id_paciente, id_doctor } = await new Consultas(req.body.condition)
   try {
-    conexion.query(
-      'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id',
-      (err: AnyType, results: AnyType) => {
-        if (results?.length === 0) {
-          res.status(400).send({ message: errorData })
-        } else {
-          res.status(200).send({ data: results })
-        }
+    const id = id_paciente !== undefined ? id_paciente : id_doctor
+    const query =
+      id_paciente !== undefined
+        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ?'
+        : id_doctor !== undefined
+        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ?'
+        : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id'
+    conexion.query(query, [id], (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        res.status(400).send({ message: errorData })
+      } else {
+        res.status(200).send({ data: results })
       }
-    )
+    })
   } catch (error: AnyType) {
     res.status(400).send({ message: error })
   }

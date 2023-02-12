@@ -78,6 +78,12 @@ export const registerPaciente = Joi.object().keys({
     clave: requiredString,
   }),
 })
+export const getConsulta = Joi.object().keys({
+  condition: Joi.object().keys({
+    id_paciente: joiNumber,
+    id_doctor: joiNumber,
+  }),
+})
 export const updateDoctor = Joi.object().keys({
   condition: Joi.object().keys({
     id: requirednumber,

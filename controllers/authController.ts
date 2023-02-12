@@ -83,9 +83,122 @@ exports.login = async (req: Request, res: Response) => {
             results?.length === 0 ||
             !(await bcryptjs.compare(password, results?.[0]?.clave))
           ) {
-            res
-              .status(400)
-              .send({ message: 'Usuario o contraseña incorrectos' })
+            conexion.query(
+              'SELECT * FROM pacientes WHERE cedula = ? AND estado="A"',
+              [user],
+              async (_err: AnyType, results2: AnyType) => {
+                if (
+                  results2?.length === 0 ||
+                  !(await bcryptjs.compare(password, results2?.[0]?.clave))
+                ) {
+                  conexion.query(
+                    'SELECT * FROM doctores WHERE cedula = ? AND estado="A"',
+                    [user],
+                    async (_err: AnyType, results3: AnyType) => {
+                      if (
+                        results3?.length === 0 ||
+                        !(await bcryptjs.compare(
+                          password,
+                          results3?.[0]?.clave
+                        ))
+                      ) {
+                        res
+                          .status(400)
+                          .send({ message: 'Usuario o contraseña incorrectos' })
+                      } else {
+                        try {
+                          const {
+                            id,
+                            usuario,
+                            nombre,
+                            apellido,
+                            imagen,
+                            cedula,
+                          } = results3[0]
+                          const token = jwt.sign(
+                            { id: id },
+                            process.env.JWR_SECRETO,
+                            {
+                              expiresIn: process.env.JWT_TIEMPO_EXPIRA,
+                            }
+                          )
+                          const cookieOptions = {
+                            expires: new Date(
+                              Date.now() +
+                                Number(process.env.JWT_TIEMPO_EXPIRA) *
+                                  24 *
+                                  60 *
+                                  60 *
+                                  1000
+                            ),
+                          }
+                          const expirationDate = new Date()
+                          expirationDate.setDate(expirationDate.getDate() + 1)
+                          res.cookie('jwt', token, cookieOptions)
+                          res.status(200).send({
+                            data: {
+                              usuario: usuario ?? cedula,
+                              nombres: nombre,
+                              privilegios: 3,
+                              apellidos: apellido,
+                              imagen: imagen,
+                              id: id,
+                              sessionCookie: {
+                                token: token,
+                                expiracion: expirationDate.toUTCString(),
+                              },
+                            },
+                          })
+                        } catch (error) {
+                          res.status(400).send({ message: error })
+                        }
+                      }
+                    }
+                  )
+                } else {
+                  try {
+                    const { id, usuario, nombres, apellidos, imagen } =
+                      results2[0]
+                    const token = jwt.sign(
+                      { id: id },
+                      process.env.JWR_SECRETO,
+                      {
+                        expiresIn: process.env.JWT_TIEMPO_EXPIRA,
+                      }
+                    )
+                    const cookieOptions = {
+                      expires: new Date(
+                        Date.now() +
+                          Number(process.env.JWT_TIEMPO_EXPIRA) *
+                            24 *
+                            60 *
+                            60 *
+                            1000
+                      ),
+                    }
+                    const expirationDate = new Date()
+                    expirationDate.setDate(expirationDate.getDate() + 1)
+                    res.cookie('jwt', token, cookieOptions)
+                    res.status(200).send({
+                      data: {
+                        usuario: usuario,
+                        nombres: nombres,
+                        privilegios: 2,
+                        apellidos: apellidos,
+                        imagen: imagen,
+                        id: id,
+                        sessionCookie: {
+                          token: token,
+                          expiracion: expirationDate.toUTCString(),
+                        },
+                      },
+                    })
+                  } catch (error) {
+                    res.status(400).send({ message: error })
+                  }
+                }
+              }
+            )
           } else {
             try {
               const { id, usuario, nombres, apellidos, imagen } = results[0]
