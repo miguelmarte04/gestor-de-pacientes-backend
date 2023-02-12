@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Consultas, Paciente } from '../entity/general'
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
+import { deleteKeys } from '../helpers/general'
 export type AnyType<T = any> = T
 const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
@@ -77,12 +78,12 @@ exports.updateConsultas = async (req: Request, res: Response) => {
 exports.getPaciente = async (req: Request, res: Response) => {
   try {
     conexion.query(
-      'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id',
+      'SELECT P.*,S.nombre seguro,N.nombre nacionalidad FROM pacientes P, seguros S,nacionalidad N WHERE P.id_seguro = S.id AND P.id_nacionalidad = N.id',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
         } else {
-          res.status(200).send({ data: results })
+          res.status(200).send({ data: deleteKeys(results, ['clave']) })
         }
       }
     )
