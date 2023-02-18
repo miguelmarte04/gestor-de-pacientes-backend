@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2023 a las 22:30:20
+-- Tiempo de generación: 18-02-2023 a las 05:08:56
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -57,6 +57,8 @@ CREATE TABLE `citas` (
   `id_paciente` int(11) NOT NULL,
   `id_doctor` int(11) NOT NULL,
   `asunto` varchar(150) NOT NULL,
+  `receta` longtext DEFAULT NULL,
+  `detalles_consulta` longtext DEFAULT NULL,
   `inicio` datetime NOT NULL,
   `fin` datetime NOT NULL,
   `fecha_insercion` datetime NOT NULL,
@@ -67,9 +69,9 @@ CREATE TABLE `citas` (
 -- Volcado de datos para la tabla `citas`
 --
 
-INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `asunto`, `inicio`, `fin`, `fecha_insercion`, `estado`) VALUES
-(1, 3, 3, 'asdsad2', '2023-02-08 00:00:00', '2023-02-09 00:00:00', '2023-02-11 20:39:41', 'A'),
-(2, 1, 1, 'prueba1', '2023-02-20 20:00:00', '2023-03-14 20:00:00', '2023-02-11 20:46:51', 'A');
+INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `asunto`, `receta`, `detalles_consulta`, `inicio`, `fin`, `fecha_insercion`, `estado`) VALUES
+(1, 3, 3, 'asdsad2', NULL, NULL, '2023-02-08 00:00:00', '2023-02-09 00:00:00', '2023-02-16 22:13:34', 'A'),
+(2, 1, 1, 'prueba1', NULL, NULL, '2023-02-20 20:00:00', '2023-03-14 20:00:00', '2023-02-11 20:46:51', 'A');
 
 -- --------------------------------------------------------
 
