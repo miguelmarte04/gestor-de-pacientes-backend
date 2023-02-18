@@ -157,7 +157,7 @@ exports.login = async (req: Request, res: Response) => {
                   )
                 } else {
                   try {
-                    const { id, usuario, nombres, apellidos, imagen } =
+                    const { id, usuario, cedula, nombres, apellidos, imagen } =
                       results2[0]
                     const token = jwt.sign(
                       { id: id },
@@ -181,7 +181,7 @@ exports.login = async (req: Request, res: Response) => {
                     res.cookie('jwt', token, cookieOptions)
                     res.status(200).send({
                       data: {
-                        usuario: usuario,
+                        usuario: usuario ?? cedula,
                         nombres: nombres,
                         privilegios: 2,
                         apellidos: apellidos,
