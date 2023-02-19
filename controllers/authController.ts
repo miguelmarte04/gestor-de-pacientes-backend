@@ -14,7 +14,7 @@ exports.register = async (req: Request, res: Response) => {
       // sexo,
       // doc_identidad,
       // tipo_doc_identidad,
-      usuario,
+      cedula,
       // fechaNacimiento,
       clave,
       // usuario_insercion,
@@ -27,7 +27,7 @@ exports.register = async (req: Request, res: Response) => {
         // sexo: sexo,
         // doc_identidad: doc_identidad,
         // tipo_doc_identidad: tipo_doc_identidad,
-        usuario: usuario,
+        cedula: cedula,
         // fecha_nacimiento: fechaNacimiento,
         fecha_insercion: new Date(),
         // usuario_insercion: usuario_insercion,
@@ -76,7 +76,7 @@ exports.login = async (req: Request, res: Response) => {
         .send({ message: 'Por favor ingrese su usuario y/o contraseña' })
     } else {
       conexion.query(
-        'SELECT * FROM administradores WHERE usuario = ? AND estado="A"',
+        'SELECT * FROM administradores WHERE cedula = ? AND estado="A"',
         [user],
         async (_err: AnyType, results: AnyType) => {
           if (

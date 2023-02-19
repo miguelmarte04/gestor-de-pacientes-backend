@@ -25,7 +25,7 @@ export class Empleados extends BaseEntity<Empleados> {
   @Column({ type: 'varchar2', length: 1, nullable: true })
   tipo_doc_identidad: string
   @Column({ type: 'varchar2', length: 11, nullable: true })
-  usuario: string
+  cedula: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
   fechaNacimiento: Date
   @Column({ type: 'number', length: 11, nullable: true })

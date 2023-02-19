@@ -107,9 +107,7 @@ export class Horarios extends BaseEntity<Horarios> {
   @Column({ type: 'varchar2', length: 100, nullable: false })
   dias: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
-  hora_fin: string
-  @Column({ type: 'varchar2', length: 100, nullable: false })
-  hora_inicio: string
+  tanda: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
   fecha_insercion: string
   @Column({ type: 'varchar2', length: 1, nullable: true })

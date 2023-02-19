@@ -135,8 +135,7 @@ export const updateHorarios = Joi.object().keys({
   condition: Joi.object().keys({
     id: requirednumber,
     dias: requiredString,
-    hora_fin: requiredString,
-    hora_inicio: requiredString,
+    tanda: requiredString,
     oficina: requiredString,
     id_doctor: requirednumber,
     estado: requiredString,
@@ -145,8 +144,8 @@ export const updateHorarios = Joi.object().keys({
 export const registerHorarios = Joi.object().keys({
   condition: Joi.object().keys({
     dias: requiredString,
-    hora_fin: requiredString,
-    hora_inicio: requiredString,
+
+    tanda: requiredString,
     oficina: requiredString,
     id_doctor: requirednumber,
   }),

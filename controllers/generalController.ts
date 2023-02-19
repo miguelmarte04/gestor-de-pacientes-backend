@@ -217,7 +217,7 @@ exports.updatePaciente = async (req: Request, res: Response) => {
 exports.getDoctores = async (req: Request, res: Response) => {
   try {
     conexion.query(
-      'SELECT D.*,N.nombre nacionalidad,E.nombre especialidad FROM doctores D, nacionalidad N,especialidad E WHERE D.id_nacionalidad = N.id AND D.id_especialidad = N.id',
+      'SELECT D.*,N.nombre nacionalidad,E.nombre especialidad FROM doctores D, nacionalidad N,especialidad E WHERE D.id_nacionalidad = N.id AND D.id_especialidad = E.id',
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
@@ -387,16 +387,16 @@ exports.getHorarios = async (req: Request, res: Response) => {
   }
 }
 exports.registerHorarios = async (req: Request, res: Response) => {
-  const { oficina, id_doctor, dias, hora_inicio, hora_fin } =
-    await new Horarios(req.body.condition)
+  const { oficina, id_doctor, dias, tanda } = await new Horarios(
+    req.body.condition
+  )
   conexion.query(
     'INSERT INTO horarios SET ?',
     {
       oficina,
       id_doctor,
       dias,
-      hora_inicio,
-      hora_fin,
+      tanda,
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -412,12 +412,13 @@ exports.registerHorarios = async (req: Request, res: Response) => {
   )
 }
 exports.updateHorarios = async (req: Request, res: Response) => {
-  const { oficina, id_doctor, estado, id, hora_fin, hora_inicio, dias } =
-    await new Horarios(req.body.condition)
+  const { oficina, id_doctor, estado, id, tanda, dias } = await new Horarios(
+    req.body.condition
+  )
 
   conexion.query(
-    'UPDATE horarios SET oficina = ?,hora_fin = ?,hora_inicio = ?,dias = ?, id_doctor = ?,estado = ? WHERE id = ?',
-    [oficina, hora_fin, hora_inicio, dias, id_doctor, estado, id],
+    'UPDATE horarios SET oficina = ?,tanda = ?,dias = ?, id_doctor = ?,estado = ? WHERE id = ?',
+    [oficina, tanda, dias, id_doctor, estado, id],
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({
