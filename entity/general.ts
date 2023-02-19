@@ -10,6 +10,10 @@ export class Consultas extends BaseEntity<Consultas> {
   id_doctor: number
   @Column({ type: 'varchar2', length: 100, nullable: false })
   asunto: string
+  @Column({ type: 'varchar2', nullable: false })
+  detalles_consulta: string
+  @Column({ type: 'varchar2', nullable: false })
+  receta: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
   inicio: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
@@ -99,7 +103,13 @@ export class Horarios extends BaseEntity<Horarios> {
   @Column({ type: 'number', nullable: false })
   id_doctor: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
-  nombre: string
+  oficina: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  dias: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  hora_fin: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  hora_inicio: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
   fecha_insercion: string
   @Column({ type: 'varchar2', length: 1, nullable: true })

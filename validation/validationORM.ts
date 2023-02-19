@@ -33,6 +33,8 @@ export const updateConsultas = Joi.object().keys({
     id_doctor: requirednumber,
     asunto: requiredString,
     inicio: requiredString,
+    detalles_consulta: joiString,
+    receta: joiString,
     fin: requiredString,
     estado: requiredString,
   }),
@@ -132,14 +134,20 @@ export const registerEspecialidades = Joi.object().keys({
 export const updateHorarios = Joi.object().keys({
   condition: Joi.object().keys({
     id: requirednumber,
+    dias: requiredString,
+    hora_fin: requiredString,
+    hora_inicio: requiredString,
+    oficina: requiredString,
     id_doctor: requirednumber,
-    nombre: requiredString,
     estado: requiredString,
   }),
 })
 export const registerHorarios = Joi.object().keys({
   condition: Joi.object().keys({
-    nombre: requiredString,
+    dias: requiredString,
+    hora_fin: requiredString,
+    hora_inicio: requiredString,
+    oficina: requiredString,
     id_doctor: requirednumber,
   }),
 })

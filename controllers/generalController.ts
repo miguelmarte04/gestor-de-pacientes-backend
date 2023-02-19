@@ -24,6 +24,12 @@ exports.getConsultas = async (req: Request, res: Response) => {
           : id_doctor !== undefined
           ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ?'
           : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id'
+        : estado === 'T'
+        ? id_paciente !== undefined
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado = "T"'
+          : id_doctor !== undefined
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado = "T"'
+          : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.estado = "T"'
         : id_paciente !== undefined
         ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado <> "T"'
         : id_doctor !== undefined
@@ -68,11 +74,20 @@ exports.registerConsultas = async (req: Request, res: Response) => {
   )
 }
 exports.updateConsultas = async (req: Request, res: Response) => {
-  const { id, id_paciente, id_doctor, asunto, fin, inicio, estado } =
-    await new Consultas(req.body.condition)
+  const {
+    id,
+    id_paciente,
+    id_doctor,
+    asunto,
+    fin,
+    inicio,
+    estado,
+    detalles_consulta,
+    receta,
+  } = await new Consultas(req.body.condition)
 
   conexion.query(
-    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, inicio = ?, fin = ?, fecha_insercion = ?, estado = ? WHERE id = ?',
+    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, inicio = ?, fin = ?, fecha_insercion = ?, estado = ?, detalles_consulta = ?,receta = ? WHERE id = ?',
     [
       id_paciente,
       id_doctor,
@@ -81,6 +96,8 @@ exports.updateConsultas = async (req: Request, res: Response) => {
       new Date(fin),
       new Date(),
       estado,
+      detalles_consulta,
+      receta,
       id,
     ],
     (err: AnyType, results: Response) => {
@@ -370,12 +387,16 @@ exports.getHorarios = async (req: Request, res: Response) => {
   }
 }
 exports.registerHorarios = async (req: Request, res: Response) => {
-  const { nombre, id_doctor } = await new Horarios(req.body.condition)
+  const { oficina, id_doctor, dias, hora_inicio, hora_fin } =
+    await new Horarios(req.body.condition)
   conexion.query(
     'INSERT INTO horarios SET ?',
     {
-      nombre,
+      oficina,
       id_doctor,
+      dias,
+      hora_inicio,
+      hora_fin,
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -391,13 +412,12 @@ exports.registerHorarios = async (req: Request, res: Response) => {
   )
 }
 exports.updateHorarios = async (req: Request, res: Response) => {
-  const { nombre, id_doctor, estado, id } = await new Horarios(
-    req.body.condition
-  )
+  const { oficina, id_doctor, estado, id, hora_fin, hora_inicio, dias } =
+    await new Horarios(req.body.condition)
 
   conexion.query(
-    'UPDATE horarios SET nombre = ?,id_doctor = ?,estado = ? WHERE id = ?',
-    [nombre, id_doctor, estado, id],
+    'UPDATE horarios SET oficina = ?,hora_fin = ?,hora_inicio = ?,dias = ?, id_doctor = ?,estado = ? WHERE id = ?',
+    [oficina, hora_fin, hora_inicio, dias, id_doctor, estado, id],
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({
