@@ -9,6 +9,7 @@ import {
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
+import { Empleados } from '../entity/auth'
 export type AnyType<T = any> = T
 const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
@@ -202,6 +203,79 @@ exports.updatePaciente = async (req: Request, res: Response) => {
       imagen,
       id,
     ],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Paciente',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Paciente Actualizado con exito' })
+      }
+    }
+  )
+}
+exports.getAdministradores = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM administradores',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({
+            data: deleteKeys(results, ['clave']),
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerAdministradores = async (req: Request, res: Response) => {
+  const {
+    cedula,
+    nombres,
+    apellidos,
+    // fecha_nacimiento,
+    // id_seguro,
+    // id_nacionalidad,
+    // telefono,
+    sexo,
+    // email,
+    clave,
+    imagen,
+  } = await new Empleados(req.body.condition)
+  conexion.query(
+    'INSERT INTO administradores SET ?',
+    {
+      cedula,
+      nombres,
+      apellidos,
+      imagen,
+      clave: await bcryptjs.hash(clave, 8),
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Paciente',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Paciente registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateAdministradores = async (req: Request, res: Response) => {
+  const { cedula, nombres, apellidos, imagen, estado, id } =
+    await new Empleados(req.body.condition)
+
+  conexion.query(
+    'UPDATE administradores SET nombres = ?, apellidos = ?, cedula = ?,estado = ?,imagen = ? WHERE id = ?',
+    [nombres, apellidos, cedula, estado, imagen, id],
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({

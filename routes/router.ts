@@ -4,11 +4,13 @@ import {
   cambiarContraSchema,
   getConsulta,
   personaSchema,
+  registerAdministradores,
   registerConsultas,
   registerDoctor,
   registerEspecialidades,
   registerHorarios,
   registerPaciente,
+  updateAdministradores,
   updateConsultas,
   updateDoctor,
   updateEspecialidades,
@@ -51,6 +53,17 @@ router.put(
   '/pacientes/paciente',
   validateSchema(updatePaciente),
   generalController.updatePaciente
+)
+router.post('/administradores', generalController.getAdministradores)
+router.post(
+  '/administradores/administrador',
+  validateSchema(registerAdministradores),
+  generalController.registerAdministradores
+)
+router.put(
+  '/administradores/administrador',
+  validateSchema(updateAdministradores),
+  generalController.updateAdministradores
 )
 router.post('/nacionalidades', generalController.getNacionalidades)
 router.post('/seguros', generalController.getSeguros)

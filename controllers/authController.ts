@@ -45,6 +45,7 @@ exports.register = async (req: Request, res: Response) => {
     res.status(400).send({ message: error })
   }
 }
+
 exports.home = async (req: Request, res: Response) => {
   res.status(200).send({ message: 'Hello World' })
 }

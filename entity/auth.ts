@@ -32,6 +32,10 @@ export class Empleados extends BaseEntity<Empleados> {
   id_cargo: number
   @Column({ type: 'datetime' })
   fecha_insercion: Date
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  estado: string
+  @Column({ type: 'varchar2', nullable: true })
+  imagen: string
   @Column({ type: 'varchar2', length: 11, nullable: true })
   pass: string
   @Column({ type: 'varchar2', length: 11, nullable: true })
