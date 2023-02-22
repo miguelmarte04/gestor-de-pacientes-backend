@@ -387,7 +387,7 @@ exports.getHorarios = async (req: Request, res: Response) => {
   }
 }
 exports.registerHorarios = async (req: Request, res: Response) => {
-  const { oficina, id_doctor, dias, tanda } = await new Horarios(
+  const { oficina, id_doctor, tanda_manana, tanda_tarde } = await new Horarios(
     req.body.condition
   )
   conexion.query(
@@ -395,8 +395,8 @@ exports.registerHorarios = async (req: Request, res: Response) => {
     {
       oficina,
       id_doctor,
-      dias,
-      tanda,
+      tanda_manana,
+      tanda_tarde,
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -412,13 +412,12 @@ exports.registerHorarios = async (req: Request, res: Response) => {
   )
 }
 exports.updateHorarios = async (req: Request, res: Response) => {
-  const { oficina, id_doctor, estado, id, tanda, dias } = await new Horarios(
-    req.body.condition
-  )
+  const { oficina, id_doctor, estado, id, tanda_manana, tanda_tarde } =
+    await new Horarios(req.body.condition)
 
   conexion.query(
-    'UPDATE horarios SET oficina = ?,tanda = ?,dias = ?, id_doctor = ?,estado = ? WHERE id = ?',
-    [oficina, tanda, dias, id_doctor, estado, id],
+    'UPDATE horarios SET oficina = ?,tanda_manana = ?,tanda_tarde = ?, id_doctor = ?,estado = ? WHERE id = ?',
+    [oficina, tanda_manana, tanda_tarde, id_doctor, estado, id],
     (err: AnyType, results: Response) => {
       if (!results) {
         res.status(400).send({
