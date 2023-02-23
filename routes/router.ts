@@ -3,15 +3,18 @@ import { validateSchema } from '../database/validation'
 import {
   cambiarContraSchema,
   getConsulta,
+  getDetCitas,
   personaSchema,
   registerAdministradores,
   registerConsultas,
+  registerDetCitas,
   registerDoctor,
   registerEspecialidades,
   registerHorarios,
   registerPaciente,
   updateAdministradores,
   updateConsultas,
+  updateDetCitas,
   updateDoctor,
   updateEspecialidades,
   updateHorarios,
@@ -64,6 +67,24 @@ router.put(
   '/administradores/administrador',
   validateSchema(updateAdministradores),
   generalController.updateAdministradores
+)
+router.post('/tipo_lesion', generalController.getTipoLesion)
+router.post('/color_lesion', generalController.getColorLesion)
+
+router.post(
+  '/detcitas',
+  validateSchema(getDetCitas),
+  generalController.getDetCitas
+)
+router.post(
+  '/detcitas/detcita',
+  validateSchema(registerDetCitas),
+  generalController.registerDetCitas
+)
+router.put(
+  '/detcitas/detcita',
+  validateSchema(updateDetCitas),
+  generalController.updateDetCitas
 )
 router.post('/nacionalidades', generalController.getNacionalidades)
 router.post('/seguros', generalController.getSeguros)

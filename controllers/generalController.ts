@@ -9,7 +9,7 @@ import {
 const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
-import { Empleados } from '../entity/auth'
+import { Det_citas, Empleados } from '../entity/auth'
 export type AnyType<T = any> = T
 const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
@@ -284,6 +284,146 @@ exports.updateAdministradores = async (req: Request, res: Response) => {
         })
       } else {
         res.status(200).send({ message: 'Paciente Actualizado con exito' })
+      }
+    }
+  )
+}
+exports.getDetCitas = async (req: Request, res: Response) => {
+  try {
+    const { id_cita } = await new Det_citas(req.body.condition)
+    conexion.query(
+      'SELECT DC.*,TL.nombre tipo_lesion,CL.color color FROM det_citas DC, tipo_lesion TL,color_lesion CL WHERE Dc.id_tipo_lesion = TL.id AND DC.id_color_lesion = CL.id AND DC.id_cita = ?',
+      [id_cita],
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({
+            data: results,
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getTipoLesion = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM tipo_lesion',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({
+            data: results,
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.getColorLesion = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM color_lesion',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({
+            data: results,
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerDetCitas = async (req: Request, res: Response) => {
+  const {
+    id_cita,
+    id_tipo_lesion,
+    id_color_lesion,
+    localizacion,
+    antecedentes_patologicos,
+    tratamiento_previo,
+    lesiones_anteriores,
+    fecha_lesion_anterior,
+    detalles_extras,
+  } = await new Det_citas(req.body.condition)
+  conexion.query(
+    'INSERT INTO det_citas SET ?',
+    {
+      id_cita,
+      id_tipo_lesion,
+      id_color_lesion,
+      localizacion,
+      antecedentes_patologicos,
+      tratamiento_previo,
+      lesiones_anteriores,
+      fecha_lesion_anterior,
+      detalles_extras,
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Detalle de cita',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res
+          .status(200)
+          .send({ message: 'Detalle de cita registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateDetCitas = async (req: Request, res: Response) => {
+  const {
+    id_cita,
+    id_tipo_lesion,
+    id_color_lesion,
+    localizacion,
+    antecedentes_patologicos,
+    tratamiento_previo,
+    lesiones_anteriores,
+    fecha_lesion_anterior,
+    detalles_extras,
+    estado,
+    id,
+  } = await new Det_citas(req.body.condition)
+
+  conexion.query(
+    'UPDATE det_citas SET id_cita = ?, id_tipo_lesion = ?, id_color_lesion = ?,localizacion = ?,antecedentes_patologicos = ?,tratamiento_previo = ?,lesiones_anteriores = ?,fecha_lesion_anterior = ?,detalles_extras = ?,estado = ? WHERE id = ?',
+    [
+      id_cita,
+      id_tipo_lesion,
+      id_color_lesion,
+      localizacion,
+      antecedentes_patologicos,
+      tratamiento_previo,
+      lesiones_anteriores,
+      fecha_lesion_anterior,
+      detalles_extras,
+      estado,
+      id,
+    ],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Detalle de cita',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res
+          .status(200)
+          .send({ message: 'Detalle de cita Actualizado con exito' })
       }
     }
   )

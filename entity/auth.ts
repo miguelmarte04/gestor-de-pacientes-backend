@@ -41,6 +41,33 @@ export class Empleados extends BaseEntity<Empleados> {
   @Column({ type: 'varchar2', length: 11, nullable: true })
   clave: string
 }
+@Entity('DET_CITAS')
+export class Det_citas extends BaseEntity<Det_citas> {
+  @PrimaryGeneratedColumn()
+  id: number
+  @Column({ type: 'number', nullable: true })
+  id_cita: number
+  @Column({ type: 'number', nullable: true })
+  id_tipo_lesion: number
+  @Column({ type: 'number', nullable: true })
+  id_color_lesion: number
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  localizacion: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  antecedentes_patologicos: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  tratamiento_previo: string
+  @Column({ type: 'varchar2', length: 1, nullable: true })
+  lesiones_anteriores: string
+  @Column({ type: 'varchar2', nullable: true })
+  fecha_lesion_anterior: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  detalles_extras: string
+  @Column({ type: 'varchar2' })
+  fecha_insercion: string
+  @Column({ type: 'varchar2', length: 100, nullable: true })
+  estado: string
+}
 @Entity('EMPRESA')
 export class Empresa extends BaseEntity<Empresa> {
   @PrimaryGeneratedColumn()

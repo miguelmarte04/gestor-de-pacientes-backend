@@ -75,6 +75,21 @@ export const updateAdministradores = Joi.object().keys({
     estado: requiredString,
   }),
 })
+export const updateDetCitas = Joi.object().keys({
+  condition: Joi.object().keys({
+    id: requirednumber,
+    id_cita: requirednumber,
+    id_tipo_lesion: requirednumber,
+    id_color_lesion: requirednumber,
+    localizacion: requiredString,
+    antecedentes_patologicos: requiredString,
+    tratamiento_previo: requiredString,
+    lesiones_anteriores: requiredString,
+    fecha_lesion_anterior: requiredString,
+    detalles_extras: requiredString,
+    estado: requiredString,
+  }),
+})
 export const registerPaciente = Joi.object().keys({
   condition: Joi.object().keys({
     cedula: requiredString,
@@ -97,6 +112,24 @@ export const registerAdministradores = Joi.object().keys({
     apellidos: requiredString,
     imagen: joiString,
     clave: requiredString,
+  }),
+})
+export const registerDetCitas = Joi.object().keys({
+  condition: Joi.object().keys({
+    id_cita: requirednumber,
+    id_tipo_lesion: requirednumber,
+    id_color_lesion: requirednumber,
+    localizacion: requiredString,
+    antecedentes_patologicos: requiredString,
+    tratamiento_previo: requiredString,
+    lesiones_anteriores: requiredString,
+    fecha_lesion_anterior: requiredString,
+    detalles_extras: requiredString,
+  }),
+})
+export const getDetCitas = Joi.object().keys({
+  condition: Joi.object().keys({
+    id_cita: requirednumber,
   }),
 })
 export const getConsulta = Joi.object().keys({
