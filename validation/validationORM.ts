@@ -83,10 +83,10 @@ export const updateDetCitas = Joi.object().keys({
     id_color_lesion: requirednumber,
     localizacion: requiredString,
     antecedentes_patologicos: requiredString,
-    tratamiento_previo: requiredString,
+    tratamiento_previo: joiString,
     lesiones_anteriores: requiredString,
-    fecha_lesion_anterior: requiredString,
-    detalles_extras: requiredString,
+    fecha_lesion_anterior: joiString,
+    detalles_extras: joiString,
     estado: requiredString,
   }),
 })
@@ -121,10 +121,10 @@ export const registerDetCitas = Joi.object().keys({
     id_color_lesion: requirednumber,
     localizacion: requiredString,
     antecedentes_patologicos: requiredString,
-    tratamiento_previo: requiredString,
+    tratamiento_previo: joiString,
     lesiones_anteriores: requiredString,
-    fecha_lesion_anterior: requiredString,
-    detalles_extras: requiredString,
+    fecha_lesion_anterior: joiString,
+    detalles_extras: joiString,
   }),
 })
 export const getDetCitas = Joi.object().keys({

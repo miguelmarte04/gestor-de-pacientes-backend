@@ -299,7 +299,7 @@ exports.getDetCitas = async (req: Request, res: Response) => {
           res.status(400).send({ message: errorData })
         } else {
           res.status(200).send({
-            data: results,
+            data: results?.[0],
           })
         }
       }
