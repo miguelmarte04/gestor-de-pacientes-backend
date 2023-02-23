@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-02-2023 a las 05:23:06
+-- Tiempo de generación: 23-02-2023 a las 15:43:27
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -119,6 +119,13 @@ CREATE TABLE `det_citas` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `det_citas`
+--
+
+INSERT INTO `det_citas` (`id`, `id_cita`, `id_tipo_lesion`, `id_color_lesion`, `localizacion`, `antecedentes_patologicos`, `tratamiento_previo`, `lesiones_anteriores`, `fecha_lesion_anterior`, `detalles_extras`, `fecha_insercion`, `estado`) VALUES
+(2, 6, 1, 1, 'asdasd', 'asdasd', 'sadsad', 'S', '2023-02-23 18:34:01', 'adasdsasd', '2023-02-23 10:34:03', 'A');
 
 -- --------------------------------------------------------
 
@@ -396,7 +403,7 @@ ALTER TABLE `color_lesion`
 -- AUTO_INCREMENT de la tabla `det_citas`
 --
 ALTER TABLE `det_citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
