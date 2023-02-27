@@ -49,7 +49,7 @@ exports.getConsultas = async (req: Request, res: Response) => {
   }
 }
 exports.registerConsultas = async (req: Request, res: Response) => {
-  const { id_paciente, id_doctor, asunto, fin, inicio } = await new Consultas(
+  const { id_paciente, id_doctor, asunto, id_tanda, dia } = await new Consultas(
     req.body.condition
   )
   conexion.query(
@@ -58,8 +58,8 @@ exports.registerConsultas = async (req: Request, res: Response) => {
       id_paciente,
       id_doctor,
       asunto,
-      inicio: new Date(inicio),
-      fin: new Date(fin),
+      id_tanda,
+      dia,
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -75,29 +75,19 @@ exports.registerConsultas = async (req: Request, res: Response) => {
   )
 }
 exports.updateConsultas = async (req: Request, res: Response) => {
-  const {
-    id,
-    id_paciente,
-    id_doctor,
-    asunto,
-    fin,
-    inicio,
-    estado,
-    detalles_consulta,
-    receta,
-  } = await new Consultas(req.body.condition)
+  const { id, id_paciente, id_doctor, asunto, estado, receta, id_tanda, dia } =
+    await new Consultas(req.body.condition)
 
   conexion.query(
-    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, inicio = ?, fin = ?, fecha_insercion = ?, estado = ?, detalles_consulta = ?,receta = ? WHERE id = ?',
+    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, id_tanda = ?, dia = ?, fecha_insercion = ?, estado = ?,receta = ? WHERE id = ?',
     [
       id_paciente,
       id_doctor,
       asunto,
-      new Date(inicio),
-      new Date(fin),
+      id_tanda,
+      dia,
       new Date(),
       estado,
-      detalles_consulta,
       receta,
       id,
     ],

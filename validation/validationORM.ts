@@ -31,11 +31,11 @@ export const updateConsultas = Joi.object().keys({
     id: requirednumber,
     id_paciente: requirednumber,
     id_doctor: requirednumber,
+    id_tanda: requiredString,
+    dia: requirednumber,
     asunto: requiredString,
-    inicio: requiredString,
     detalles_consulta: joiString,
     receta: joiString,
-    fin: requiredString,
     estado: requiredString,
   }),
 })
@@ -44,8 +44,8 @@ export const registerConsultas = Joi.object().keys({
     id_paciente: requirednumber,
     id_doctor: requirednumber,
     asunto: requiredString,
-    inicio: requiredString,
-    fin: requiredString,
+    id_tanda: requiredString,
+    dia: requirednumber,
   }),
 })
 export const updatePaciente = Joi.object().keys({

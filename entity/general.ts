@@ -8,16 +8,16 @@ export class Consultas extends BaseEntity<Consultas> {
   id_paciente: number
   @Column({ type: 'number', nullable: false })
   id_doctor: number
+  @Column({ type: 'number', nullable: false })
+  dia: number
   @Column({ type: 'varchar2', length: 100, nullable: false })
   asunto: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
+  id_tanda: string
   @Column({ type: 'varchar2', nullable: false })
   detalles_consulta: string
   @Column({ type: 'varchar2', nullable: false })
   receta: string
-  @Column({ type: 'varchar2', length: 100, nullable: false })
-  inicio: string
-  @Column({ type: 'varchar2', length: 100, nullable: false })
-  fin: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
   fecha_insercion: string
   @Column({ type: 'varchar2', length: 1, nullable: true })
