@@ -63,6 +63,8 @@ export class Doctor extends BaseEntity<Doctor> {
   @Column({ type: 'varchar2', length: 100, nullable: false })
   nombre: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
+  exequatur: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
   apellido: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
   imagen: string

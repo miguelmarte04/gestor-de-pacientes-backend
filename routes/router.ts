@@ -25,11 +25,11 @@ const authController = require('../controllers/authController')
 const generalController = require('../controllers/generalController')
 router.get('/', authController.home)
 router.post('/register', validateSchema(personaSchema), authController.register)
-router.put(
-  '/cambiar_contra',
-  validateSchema(cambiarContraSchema),
-  authController.cambiarContra
-)
+// router.put(
+//   '/cambiar_contra',
+//   validateSchema(cambiarContraSchema),
+//   authController.cambiarContra
+// )
 router.post('/login', authController.login)
 router.post(
   '/consultas',

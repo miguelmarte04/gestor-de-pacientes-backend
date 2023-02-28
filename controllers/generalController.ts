@@ -10,8 +10,9 @@ const conexion = require('../database/db')
 import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
 import { Det_citas, Empleados } from '../entity/auth'
+import { cryptr } from './authController'
 export type AnyType<T = any> = T
-const bcryptjs = require('bcryptjs')
+// const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
   const { id_paciente, id_doctor, estado } = await new Consultas(
     req.body.condition
@@ -111,7 +112,15 @@ exports.getPaciente = async (req: Request, res: Response) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
         } else {
-          res.status(200).send({ data: deleteKeys(results, ['clave']) })
+          const data = results?.map((item: AnyType) => {
+            return {
+              ...item,
+              clave: cryptr.decrypt(item.clave),
+            }
+          })
+          res.status(200).send({
+            data,
+          })
         }
       }
     )
@@ -146,7 +155,7 @@ exports.registerPaciente = async (req: Request, res: Response) => {
       telefono,
       sexo,
       email,
-      clave: await bcryptjs.hash(clave, 8),
+      clave: cryptr.encrypt(clave),
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -213,8 +222,14 @@ exports.getAdministradores = async (req: Request, res: Response) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
         } else {
+          const data = results?.map((item: AnyType) => {
+            return {
+              ...item,
+              clave: cryptr.decrypt(item.clave),
+            }
+          })
           res.status(200).send({
-            data: deleteKeys(results, ['clave']),
+            data,
           })
         }
       }
@@ -244,7 +259,7 @@ exports.registerAdministradores = async (req: Request, res: Response) => {
       nombres,
       apellidos,
       imagen,
-      clave: await bcryptjs.hash(clave, 8),
+      clave: cryptr.encrypt(clave),
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -426,7 +441,15 @@ exports.getDoctores = async (req: Request, res: Response) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
         } else {
-          res.status(200).send({ data: results })
+          const data = results?.map((item: AnyType) => {
+            return {
+              ...item,
+              clave: cryptr.decrypt(item.clave),
+            }
+          })
+          res.status(200).send({
+            data,
+          })
         }
       }
     )
@@ -444,6 +467,7 @@ exports.registerDoctor = async (req: Request, res: Response) => {
     id_nacionalidad,
     telefono,
     sexo,
+    exequatur,
     correo,
     clave,
     imagen,
@@ -458,10 +482,11 @@ exports.registerDoctor = async (req: Request, res: Response) => {
       id_especialidad,
       id_nacionalidad,
       imagen,
+      exequatur,
       telefono,
       sexo,
       correo,
-      clave: await bcryptjs.hash(clave, 8),
+      clave: cryptr.encrypt(clave),
       fecha_insercion: new Date(),
     },
     (err: AnyType, results: Response) => {
@@ -487,18 +512,20 @@ exports.updateDoctor = async (req: Request, res: Response) => {
     telefono,
     sexo,
     imagen,
+    exequatur,
     correo,
     estado,
     id,
   } = await new Doctor(req.body.condition)
 
   conexion.query(
-    'UPDATE doctores SET cedula = ?,nombre = ?, apellido = ?, fecha_nacimiento = ?,id_especialidad = ?,id_nacionalidad = ?,telefono = ?, sexo = ?, correo = ?, estado = ?,imagen = ? WHERE id = ?',
+    'UPDATE doctores SET cedula = ?,nombre = ?, apellido = ?, fecha_nacimiento = ?,exequatur = ?,id_especialidad = ?,id_nacionalidad = ?,telefono = ?, sexo = ?, correo = ?, estado = ?,imagen = ? WHERE id = ?',
     [
       cedula,
       nombre,
       apellido,
       new Date(fecha_nacimiento),
+      exequatur,
       id_especialidad,
       id_nacionalidad,
       telefono,

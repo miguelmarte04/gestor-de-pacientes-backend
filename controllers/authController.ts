@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
-const bcryptjs = require('bcryptjs')
+// const bcryptjs = require('bcryptjs')
 const conexion = require('../database/db')
 const { promisify } = require('util')
 import { NextFunction, Response, Request } from 'express'
 import { Empleados } from '../entity/auth'
 export type AnyType<T = any> = T
-
+const Cryptr = require('cryptr')
+export const cryptr = new Cryptr('myTotalySecretKey')
 exports.register = async (req: Request, res: Response) => {
   try {
     const {
@@ -31,7 +32,7 @@ exports.register = async (req: Request, res: Response) => {
         // fecha_nacimiento: fechaNacimiento,
         fecha_insercion: new Date(),
         // usuario_insercion: usuario_insercion,
-        clave: await bcryptjs.hash(clave, 8),
+        clave: cryptr.encrypt('clave'),
       },
       (err: AnyType) => {
         if (err) {
@@ -49,28 +50,29 @@ exports.register = async (req: Request, res: Response) => {
 exports.home = async (req: Request, res: Response) => {
   res.status(200).send({ message: 'Hello World' })
 }
-exports.cambiarContra = async (req: Request, res: Response) => {
-  const { id, pass } = await new Empleados(req.body.condition)
-  conexion.query(
-    'UPDATE empleados SET pass = ? WHERE id = ?',
-    [await bcryptjs.hash(pass, 8), id],
-    (_err: AnyType, resultUpdate: AnyType) => {
-      if (resultUpdate?.length === 0) {
-        res.status(400).send({
-          message: 'Usuario o contraseña incorrectos',
-        })
-      } else {
-        res.status(200).send({
-          message: 'Contraseña actualizada con éxito',
-        })
-      }
-    }
-  )
-}
+// exports.cambiarContra = async (req: Request, res: Response) => {
+//   const { id, pass } = await new Empleados(req.body.condition)
+//   conexion.query(
+//     'UPDATE empleados SET pass = ? WHERE id = ?',
+//     [await bcryptjs.hash(pass, 8), id],
+//     (_err: AnyType, resultUpdate: AnyType) => {
+//       if (resultUpdate?.length === 0) {
+//         res.status(400).send({
+//           message: 'Usuario o contraseña incorrectos',
+//         })
+//       } else {
+//         res.status(200).send({
+//           message: 'Contraseña actualizada con éxito',
+//         })
+//       }
+//     }
+//   )
+// }
 
 exports.login = async (req: Request, res: Response) => {
   try {
     const { user, password } = req.body
+
     if (!user || !password) {
       res
         .status(400)
@@ -80,9 +82,10 @@ exports.login = async (req: Request, res: Response) => {
         'SELECT * FROM administradores WHERE cedula = ? AND estado="A"',
         [user],
         async (_err: AnyType, results: AnyType) => {
+          console.log(cryptr.decrypt(results?.[0]?.clave), password)
           if (
             results?.length === 0 ||
-            !(await bcryptjs.compare(password, results?.[0]?.clave))
+            !(cryptr.decrypt(results?.[0]?.clave) === password)
           ) {
             conexion.query(
               'SELECT * FROM pacientes WHERE cedula = ? AND estado="A"',
@@ -90,7 +93,7 @@ exports.login = async (req: Request, res: Response) => {
               async (_err: AnyType, results2: AnyType) => {
                 if (
                   results2?.length === 0 ||
-                  !(await bcryptjs.compare(password, results2?.[0]?.clave))
+                  !(cryptr.decrypt(results2?.[0]?.clave) === password)
                 ) {
                   conexion.query(
                     'SELECT * FROM doctores WHERE cedula = ? AND estado="A"',
@@ -98,10 +101,7 @@ exports.login = async (req: Request, res: Response) => {
                     async (_err: AnyType, results3: AnyType) => {
                       if (
                         results3?.length === 0 ||
-                        !(await bcryptjs.compare(
-                          password,
-                          results3?.[0]?.clave
-                        ))
+                        !(cryptr.decrypt(results3?.[0]?.clave) === password)
                       ) {
                         res
                           .status(400)
