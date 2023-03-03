@@ -13,7 +13,7 @@ export const personaSchema = Joi.object().keys({
     apellidos: requiredString,
     // sexo: requiredString,
     // doc_identidad: requiredString,
-    usuario: requiredString,
+    cedula: requiredString,
     // fechaNacimiento: requiredString,
     // usuario_insercion: requiredString,
     clave: requiredString,

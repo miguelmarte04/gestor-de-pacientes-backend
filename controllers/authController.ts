@@ -32,7 +32,7 @@ exports.register = async (req: Request, res: Response) => {
         // fecha_nacimiento: fechaNacimiento,
         fecha_insercion: new Date(),
         // usuario_insercion: usuario_insercion,
-        clave: cryptr.encrypt('clave'),
+        clave: cryptr.encrypt(clave),
       },
       (err: AnyType) => {
         if (err) {
@@ -82,10 +82,16 @@ exports.login = async (req: Request, res: Response) => {
         'SELECT * FROM administradores WHERE cedula = ? AND estado="A"',
         [user],
         async (_err: AnyType, results: AnyType) => {
-          console.log(cryptr.decrypt(results?.[0]?.clave), password)
+          // console.log(
+          //   'entro',
+          //   results?.[0]?.clave && cryptr?.decrypt(results?.[0]?.clave)
+          // )
           if (
             results?.length === 0 ||
-            !(cryptr.decrypt(results?.[0]?.clave) === password)
+            !(
+              results?.[0]?.clave &&
+              cryptr.decrypt(results?.[0]?.clave) === password
+            )
           ) {
             conexion.query(
               'SELECT * FROM pacientes WHERE cedula = ? AND estado="A"',
@@ -93,7 +99,10 @@ exports.login = async (req: Request, res: Response) => {
               async (_err: AnyType, results2: AnyType) => {
                 if (
                   results2?.length === 0 ||
-                  !(cryptr.decrypt(results2?.[0]?.clave) === password)
+                  !(
+                    results2?.[0]?.clave &&
+                    cryptr.decrypt(results2?.[0]?.clave) === password
+                  )
                 ) {
                   conexion.query(
                     'SELECT * FROM doctores WHERE cedula = ? AND estado="A"',
@@ -101,7 +110,10 @@ exports.login = async (req: Request, res: Response) => {
                     async (_err: AnyType, results3: AnyType) => {
                       if (
                         results3?.length === 0 ||
-                        !(cryptr.decrypt(results3?.[0]?.clave) === password)
+                        !(
+                          results3?.[0]?.clave &&
+                          cryptr.decrypt(results3?.[0]?.clave) === password
+                        )
                       ) {
                         res
                           .status(400)
