@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-02-2023 a las 00:59:36
+-- Tiempo de generación: 09-03-2023 a las 05:00:26
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -44,7 +44,7 @@ CREATE TABLE `administradores` (
 --
 
 INSERT INTO `administradores` (`id`, `nombres`, `apellidos`, `imagen`, `cedula`, `clave`, `fecha_insercion`, `estado`) VALUES
-(3, 'Pedro', 'Martinez', NULL, '12345678912', 'ef7ced44b01c203aa5bb1fcfa144311edf51ad551dedb1983d89312e6f342fd91ad73a5c4a3f6007da27e153fbb285d970beb3075b519ce6f6c0c186c090503a42421a026e0550176fb5aee409212d0c3afe7ed55e9fa6e971c8fa9377236e423102ee27ba', '2023-02-27 19:03:14', 'A');
+(4, 'Pedro', 'Martinez', NULL, '12345678', '4f995ea910fe87edfe82e9c82c07d83fb2c17f707f0fef8a0544a0ec93d80a63964c87fb9489bec6772e6c68bd5db192ba0becda60b8e9a51bdea07d7b1fdea2cc4b92b920d42cd06d5c9d78aef8e25637d9c44e30865ac0af8c1e05f406eddafc63a0f1d3', '2023-03-03 10:42:32', 'A');
 
 -- --------------------------------------------------------
 
@@ -63,6 +63,13 @@ CREATE TABLE `citas` (
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `citas`
+--
+
+INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `id_tanda`, `asunto`, `dia`, `receta`, `fecha_insercion`, `estado`) VALUES
+(8, 5, 6, 'M', 'asadsad', 2, NULL, '2023-03-05 20:39:12', 'T');
 
 -- --------------------------------------------------------
 
@@ -105,6 +112,13 @@ CREATE TABLE `det_citas` (
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `det_citas`
+--
+
+INSERT INTO `det_citas` (`id`, `id_cita`, `id_tipo_lesion`, `id_color_lesion`, `localizacion`, `antecedentes_patologicos`, `tratamiento_previo`, `lesiones_anteriores`, `fecha_lesion_anterior`, `detalles_extras`, `fecha_insercion`, `estado`) VALUES
+(3, 8, 1, 1, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A');
+
 -- --------------------------------------------------------
 
 --
@@ -124,7 +138,7 @@ CREATE TABLE `doctores` (
   `sexo` varchar(1) NOT NULL,
   `telefono` varchar(16) NOT NULL,
   `fecha_nacimiento` datetime NOT NULL,
-  `correo` varchar(50) NOT NULL,
+  `correo` varchar(50) DEFAULT NULL,
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -134,7 +148,20 @@ CREATE TABLE `doctores` (
 --
 
 INSERT INTO `doctores` (`id`, `id_nacionalidad`, `id_especialidad`, `nombre`, `apellido`, `imagen`, `cedula`, `exequatur`, `clave`, `sexo`, `telefono`, `fecha_nacimiento`, `correo`, `fecha_insercion`, `estado`) VALUES
-(6, 1, 1, 'assad', 'asdasd', NULL, '23232323232', '', '6567650e33ea9dd72d93c691b5c69dce424f9a5073d18c1569aebeee920848ea472cab020573eb79b27f07b24b15fb7bff148adf3e00a11e710a760922327738044d93d7fb7fcf107db5853cc370c48b17c0a1efcde56a8b2dd90065a03e4ee450e95d57134a201f', 'M', '23232323232', '2023-02-16 23:55:20', 'sdad@gmail.com', '2023-02-27 19:55:30', 'A');
+(6, 1, 1, 'assad', 'asdasd', NULL, '23232323232', 'sadsadsadsad', '6567650e33ea9dd72d93c691b5c69dce424f9a5073d18c1569aebeee920848ea472cab020573eb79b27f07b24b15fb7bff148adf3e00a11e710a760922327738044d93d7fb7fcf107db5853cc370c48b17c0a1efcde56a8b2dd90065a03e4ee450e95d57134a201f', 'M', '23232323232', '2023-02-16 23:55:20', '', '2023-02-27 19:55:30', 'A'),
+(7, 1, 1, 'assad', 'asdsad', NULL, '11212121212', '1221323232', '02b363ec54a0ad4dfdd69285d642cf9f77ce1a11cacb438f0c75ed3e404af791582d3f5bb67c364d55fbca1b689a1b9b9684276eac40800f7aff02963df318f53b3ac2fcdd651c68b0d668f61cc428a26a44ce11e4d5d0d8908255ba92838277d16c4e399f1b5de1', 'M', '11212121212', '2023-02-10 00:00:14', 'asdsad@gmail.com', '2023-02-27 20:00:27', 'A');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `enfermedades`
+--
+
+CREATE TABLE `enfermedades` (
+  `id` int(11) NOT NULL,
+  `enfermedad` varchar(100) NOT NULL,
+  `estado` varchar(1) NOT NULL DEFAULT 'A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -178,7 +205,8 @@ CREATE TABLE `horarios` (
 --
 
 INSERT INTO `horarios` (`id`, `id_doctor`, `oficina`, `tanda_tarde`, `tanda_manana`, `fecha_insercion`, `estado`) VALUES
-(7, 1, 'ewewe', '', '1,2,3', '2023-02-22 00:08:44', 'A');
+(7, 1, 'ewewe', '', '1,2,3', '2023-02-22 00:08:44', 'A'),
+(8, 6, 'fsdfdsfd', '2,3', '1,2,3,4', '2023-03-05 20:34:48', 'A');
 
 -- --------------------------------------------------------
 
@@ -216,7 +244,7 @@ CREATE TABLE `pacientes` (
   `id_nacionalidad` int(11) NOT NULL,
   `telefono` varchar(12) NOT NULL,
   `sexo` varchar(1) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
   `clave` longtext NOT NULL,
   `fecha_insercion` datetime NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
@@ -227,7 +255,7 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `cedula`, `nombres`, `apellidos`, `imagen`, `fecha_nacimiento`, `id_seguro`, `id_nacionalidad`, `telefono`, `sexo`, `email`, `clave`, `fecha_insercion`, `estado`) VALUES
-(5, '14545145151', 'fdsfsf', 'sdfsdf', NULL, '2023-02-02 23:12:13', 1, 1, '14545145151', 'F', 'sfsdfds@gmail.com', '8ee8c8e90338997dbe4cbe007884fe673e721f20181d873928912e63454e639dfed73fa5744926785cc9edd7531b5305511740c534b2a8a165d1edb1d55140fbbaa7b44564ffc3b7c8dda99052c646c9b33c782a045565df3692563ba37544ce4c3521bb06c7d5d1', '2023-02-27 19:12:34', 'A');
+(5, '14545145151', 'fdsfsf', 'sdfsdf', NULL, '2023-02-02 23:12:13', 1, 1, '14545145151', 'F', '', '8ee8c8e90338997dbe4cbe007884fe673e721f20181d873928912e63454e639dfed73fa5744926785cc9edd7531b5305511740c534b2a8a165d1edb1d55140fbbaa7b44564ffc3b7c8dda99052c646c9b33c782a045565df3692563ba37544ce4c3521bb06c7d5d1', '2023-02-27 19:12:34', 'A');
 
 -- --------------------------------------------------------
 
@@ -311,6 +339,12 @@ ALTER TABLE `doctores`
   ADD KEY `id_nacionalidad` (`id_nacionalidad`);
 
 --
+-- Indices de la tabla `enfermedades`
+--
+ALTER TABLE `enfermedades`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `especialidad`
 --
 ALTER TABLE `especialidad`
@@ -358,13 +392,13 @@ ALTER TABLE `tipo_lesion`
 -- AUTO_INCREMENT de la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `color_lesion`
@@ -376,13 +410,19 @@ ALTER TABLE `color_lesion`
 -- AUTO_INCREMENT de la tabla `det_citas`
 --
 ALTER TABLE `det_citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
 --
 ALTER TABLE `doctores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `enfermedades`
+--
+ALTER TABLE `enfermedades`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
@@ -394,7 +434,7 @@ ALTER TABLE `especialidad`
 -- AUTO_INCREMENT de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `nacionalidad`
