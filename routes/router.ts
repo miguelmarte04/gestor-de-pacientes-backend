@@ -70,6 +70,7 @@ router.put(
 )
 router.post('/tipo_lesion', generalController.getTipoLesion)
 router.post('/color_lesion', generalController.getColorLesion)
+router.post('/enfermedades', generalController.getEnfermedades)
 
 router.post(
   '/detcitas',

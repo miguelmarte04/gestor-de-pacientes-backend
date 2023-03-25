@@ -295,10 +295,10 @@ exports.updateAdministradores = async (req: Request, res: Response) => {
 }
 exports.getDetCitas = async (req: Request, res: Response) => {
   try {
-    const { id_cita } = await new Det_citas(req.body.condition)
+    const { id_consulta } = await new Det_citas(req.body.condition)
     conexion.query(
-      'SELECT DC.*,TL.nombre tipo_lesion,CL.color color FROM det_consulta DC, tipo_lesion TL,color_lesion CL WHERE Dc.id_tipo_lesion = TL.id AND DC.id_color_lesion = CL.id AND DC.id_cita = ?',
-      [id_cita],
+      'SELECT DC.*,TL.nombre tipo_lesion,CL.color color FROM det_consulta DC, tipo_lesion TL,color_lesion CL WHERE Dc.id_tipo_lesion = TL.id AND DC.id_color_lesion = CL.id AND DC.id_consulta = ?',
+      [id_consulta],
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
           res.status(400).send({ message: errorData })
@@ -349,11 +349,30 @@ exports.getColorLesion = async (req: Request, res: Response) => {
     res.status(400).send({ message: error })
   }
 }
+exports.getEnfermedades = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT * FROM enfermedades',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          res.status(200).send({
+            data: results,
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
 exports.registerDetCitas = async (req: Request, res: Response) => {
   const {
-    id_cita,
+    id_consulta,
     id_tipo_lesion,
     id_color_lesion,
+    id_enfermedad,
     localizacion,
     antecedentes_patologicos,
     tratamiento_previo,
@@ -364,7 +383,8 @@ exports.registerDetCitas = async (req: Request, res: Response) => {
   conexion.query(
     'INSERT INTO det_consulta SET ?',
     {
-      id_cita,
+      id_consulta,
+      id_enfermedad,
       id_tipo_lesion,
       id_color_lesion,
       localizacion,
@@ -391,9 +411,10 @@ exports.registerDetCitas = async (req: Request, res: Response) => {
 }
 exports.updateDetCitas = async (req: Request, res: Response) => {
   const {
-    id_cita,
+    id_consulta,
     id_tipo_lesion,
     id_color_lesion,
+    id_enfermedad,
     localizacion,
     antecedentes_patologicos,
     tratamiento_previo,
@@ -405,11 +426,12 @@ exports.updateDetCitas = async (req: Request, res: Response) => {
   } = await new Det_citas(req.body.condition)
 
   conexion.query(
-    'UPDATE det_consulta SET id_cita = ?, id_tipo_lesion = ?, id_color_lesion = ?,localizacion = ?,antecedentes_patologicos = ?,tratamiento_previo = ?,lesiones_anteriores = ?,fecha_lesion_anterior = ?,detalles_extras = ?,estado = ? WHERE id = ?',
+    'UPDATE det_consulta SET id_consulta = ?, id_tipo_lesion = ?, id_color_lesion = ?, id_enfermedad = ?,localizacion = ?,antecedentes_patologicos = ?,tratamiento_previo = ?,lesiones_anteriores = ?,fecha_lesion_anterior = ?,detalles_extras = ?,estado = ? WHERE id = ?',
     [
-      id_cita,
+      id_consulta,
       id_tipo_lesion,
       id_color_lesion,
+      id_enfermedad,
       localizacion,
       antecedentes_patologicos,
       tratamiento_previo,

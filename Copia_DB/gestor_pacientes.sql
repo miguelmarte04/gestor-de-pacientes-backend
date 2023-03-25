@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-03-2023 a las 22:21:45
+-- Tiempo de generación: 25-03-2023 a las 23:22:05
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -90,7 +90,8 @@ CREATE TABLE `consultas` (
 
 INSERT INTO `consultas` (`id`, `id_paciente`, `id_doctor`, `id_tanda`, `asunto`, `dia`, `receta`, `fecha_insercion`, `estado`) VALUES
 (8, 5, 6, 'M', 'asadsad', 2, NULL, '2023-03-05 20:39:12', 'T'),
-(9, 5, 6, 'T', 'asadsad', 2, NULL, '2023-03-15 20:39:12', 'T');
+(9, 5, 6, 'T', 'asadsad', 2, NULL, '2023-03-15 20:39:12', 'T'),
+(10, 5, 6, 'M', 'adsad', 1, NULL, '2023-03-25 18:21:22', 'T');
 
 -- --------------------------------------------------------
 
@@ -121,7 +122,8 @@ CREATE TABLE `det_consulta` (
 INSERT INTO `det_consulta` (`id`, `id_consulta`, `id_tipo_lesion`, `id_color_lesion`, `id_enfermedad`, `localizacion`, `antecedentes_patologicos`, `tratamiento_previo`, `lesiones_anteriores`, `fecha_lesion_anterior`, `detalles_extras`, `fecha_insercion`, `estado`) VALUES
 (3, 8, 1, 1, 1, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A'),
 (4, 8, 1, 1, 2, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A'),
-(5, 8, 1, 1, 2, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A');
+(5, 8, 1, 1, 2, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A'),
+(6, 10, 1, 1, 1, 'asdsad', 'asdads', 'asdsad', 'S', '2023-03-07 22:21:01', 'asdasd', '2023-03-25 18:21:04', 'A');
 
 -- --------------------------------------------------------
 
@@ -417,13 +419,13 @@ ALTER TABLE `color_lesion`
 -- AUTO_INCREMENT de la tabla `consultas`
 --
 ALTER TABLE `consultas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `det_consulta`
 --
 ALTER TABLE `det_consulta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`

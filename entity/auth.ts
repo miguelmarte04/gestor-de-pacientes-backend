@@ -46,11 +46,13 @@ export class Det_citas extends BaseEntity<Det_citas> {
   @PrimaryGeneratedColumn()
   id: number
   @Column({ type: 'number', nullable: true })
-  id_cita: number
+  id_consulta: number
   @Column({ type: 'number', nullable: true })
   id_tipo_lesion: number
   @Column({ type: 'number', nullable: true })
   id_color_lesion: number
+  @Column({ type: 'number', nullable: true })
+  id_enfermedad: number
   @Column({ type: 'varchar2', length: 100, nullable: true })
   localizacion: string
   @Column({ type: 'varchar2', length: 100, nullable: true })
