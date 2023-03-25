@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-03-2023 a las 05:00:26
+-- Tiempo de generación: 25-03-2023 a las 22:21:45
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -49,31 +49,6 @@ INSERT INTO `administradores` (`id`, `nombres`, `apellidos`, `imagen`, `cedula`,
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `citas`
---
-
-CREATE TABLE `citas` (
-  `id` int(11) NOT NULL,
-  `id_paciente` int(11) NOT NULL,
-  `id_doctor` int(11) NOT NULL,
-  `id_tanda` varchar(1) NOT NULL,
-  `asunto` varchar(150) NOT NULL,
-  `dia` int(11) NOT NULL,
-  `receta` longtext DEFAULT NULL,
-  `fecha_insercion` datetime NOT NULL,
-  `estado` varchar(1) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `citas`
---
-
-INSERT INTO `citas` (`id`, `id_paciente`, `id_doctor`, `id_tanda`, `asunto`, `dia`, `receta`, `fecha_insercion`, `estado`) VALUES
-(8, 5, 6, 'M', 'asadsad', 2, NULL, '2023-03-05 20:39:12', 'T');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `color_lesion`
 --
 
@@ -94,14 +69,41 @@ INSERT INTO `color_lesion` (`id`, `color`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `det_citas`
+-- Estructura de tabla para la tabla `consultas`
 --
 
-CREATE TABLE `det_citas` (
+CREATE TABLE `consultas` (
   `id` int(11) NOT NULL,
-  `id_cita` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_doctor` int(11) NOT NULL,
+  `id_tanda` varchar(1) NOT NULL,
+  `asunto` varchar(150) NOT NULL,
+  `dia` int(11) NOT NULL,
+  `receta` longtext DEFAULT NULL,
+  `fecha_insercion` datetime NOT NULL,
+  `estado` varchar(1) NOT NULL DEFAULT 'A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `consultas`
+--
+
+INSERT INTO `consultas` (`id`, `id_paciente`, `id_doctor`, `id_tanda`, `asunto`, `dia`, `receta`, `fecha_insercion`, `estado`) VALUES
+(8, 5, 6, 'M', 'asadsad', 2, NULL, '2023-03-05 20:39:12', 'T'),
+(9, 5, 6, 'T', 'asadsad', 2, NULL, '2023-03-15 20:39:12', 'T');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `det_consulta`
+--
+
+CREATE TABLE `det_consulta` (
+  `id` int(11) NOT NULL,
+  `id_consulta` int(11) NOT NULL,
   `id_tipo_lesion` int(11) NOT NULL,
   `id_color_lesion` int(11) NOT NULL,
+  `id_enfermedad` int(11) NOT NULL,
   `localizacion` varchar(100) NOT NULL,
   `antecedentes_patologicos` varchar(100) NOT NULL,
   `tratamiento_previo` varchar(100) NOT NULL,
@@ -113,11 +115,13 @@ CREATE TABLE `det_citas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `det_citas`
+-- Volcado de datos para la tabla `det_consulta`
 --
 
-INSERT INTO `det_citas` (`id`, `id_cita`, `id_tipo_lesion`, `id_color_lesion`, `localizacion`, `antecedentes_patologicos`, `tratamiento_previo`, `lesiones_anteriores`, `fecha_lesion_anterior`, `detalles_extras`, `fecha_insercion`, `estado`) VALUES
-(3, 8, 1, 1, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A');
+INSERT INTO `det_consulta` (`id`, `id_consulta`, `id_tipo_lesion`, `id_color_lesion`, `id_enfermedad`, `localizacion`, `antecedentes_patologicos`, `tratamiento_previo`, `lesiones_anteriores`, `fecha_lesion_anterior`, `detalles_extras`, `fecha_insercion`, `estado`) VALUES
+(3, 8, 1, 1, 1, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A'),
+(4, 8, 1, 1, 2, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A'),
+(5, 8, 1, 1, 2, 'asdsad', 'asdsad', 'sads', 'S', '2023-03-10 00:39:00', 'asdsad', '2023-03-05 20:39:01', 'A');
 
 -- --------------------------------------------------------
 
@@ -162,6 +166,14 @@ CREATE TABLE `enfermedades` (
   `enfermedad` varchar(100) NOT NULL,
   `estado` varchar(1) NOT NULL DEFAULT 'A'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `enfermedades`
+--
+
+INSERT INTO `enfermedades` (`id`, `enfermedad`, `estado`) VALUES
+(1, 'prueba 1', 'A'),
+(2, 'prueba 2', 'A');
 
 -- --------------------------------------------------------
 
@@ -307,27 +319,28 @@ ALTER TABLE `administradores`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `citas`
---
-ALTER TABLE `citas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_doctor` (`id_doctor`),
-  ADD KEY `id_paciente` (`id_paciente`);
-
---
 -- Indices de la tabla `color_lesion`
 --
 ALTER TABLE `color_lesion`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `det_citas`
+-- Indices de la tabla `consultas`
 --
-ALTER TABLE `det_citas`
+ALTER TABLE `consultas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_cita` (`id_cita`),
+  ADD KEY `id_doctor` (`id_doctor`),
+  ADD KEY `id_paciente` (`id_paciente`);
+
+--
+-- Indices de la tabla `det_consulta`
+--
+ALTER TABLE `det_consulta`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cita` (`id_consulta`),
   ADD KEY `id_color_lesion` (`id_color_lesion`),
-  ADD KEY `id_tipo_lesion` (`id_tipo_lesion`);
+  ADD KEY `id_tipo_lesion` (`id_tipo_lesion`),
+  ADD KEY `id_enfermedad` (`id_enfermedad`);
 
 --
 -- Indices de la tabla `doctores`
@@ -395,22 +408,22 @@ ALTER TABLE `administradores`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `citas`
---
-ALTER TABLE `citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
 -- AUTO_INCREMENT de la tabla `color_lesion`
 --
 ALTER TABLE `color_lesion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `det_citas`
+-- AUTO_INCREMENT de la tabla `consultas`
 --
-ALTER TABLE `det_citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `consultas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `det_consulta`
+--
+ALTER TABLE `det_consulta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `doctores`
@@ -422,7 +435,7 @@ ALTER TABLE `doctores`
 -- AUTO_INCREMENT de la tabla `enfermedades`
 --
 ALTER TABLE `enfermedades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidad`
@@ -465,19 +478,20 @@ ALTER TABLE `tipo_lesion`
 --
 
 --
--- Filtros para la tabla `citas`
+-- Filtros para la tabla `consultas`
 --
-ALTER TABLE `citas`
-  ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`id_doctor`) REFERENCES `doctores` (`id`),
-  ADD CONSTRAINT `citas_ibfk_2` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id`);
+ALTER TABLE `consultas`
+  ADD CONSTRAINT `consultas_ibfk_1` FOREIGN KEY (`id_doctor`) REFERENCES `doctores` (`id`),
+  ADD CONSTRAINT `consultas_ibfk_2` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id`);
 
 --
--- Filtros para la tabla `det_citas`
+-- Filtros para la tabla `det_consulta`
 --
-ALTER TABLE `det_citas`
-  ADD CONSTRAINT `det_citas_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id`),
-  ADD CONSTRAINT `det_citas_ibfk_2` FOREIGN KEY (`id_color_lesion`) REFERENCES `color_lesion` (`id`),
-  ADD CONSTRAINT `det_citas_ibfk_3` FOREIGN KEY (`id_tipo_lesion`) REFERENCES `tipo_lesion` (`id`);
+ALTER TABLE `det_consulta`
+  ADD CONSTRAINT `det_consulta_ibfk_1` FOREIGN KEY (`id_consulta`) REFERENCES `consultas` (`id`),
+  ADD CONSTRAINT `det_consulta_ibfk_2` FOREIGN KEY (`id_color_lesion`) REFERENCES `color_lesion` (`id`),
+  ADD CONSTRAINT `det_consulta_ibfk_3` FOREIGN KEY (`id_tipo_lesion`) REFERENCES `tipo_lesion` (`id`),
+  ADD CONSTRAINT `det_consulta_ibfk_4` FOREIGN KEY (`id_enfermedad`) REFERENCES `enfermedades` (`id`);
 
 --
 -- Filtros para la tabla `doctores`

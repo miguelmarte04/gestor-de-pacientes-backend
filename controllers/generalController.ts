@@ -22,21 +22,21 @@ exports.getConsultas = async (req: Request, res: Response) => {
     const query =
       estado === 'H'
         ? id_paciente !== undefined
-          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ?'
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ?'
           : id_doctor !== undefined
-          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ?'
-          : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id'
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ?'
+          : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id'
         : estado === 'T'
         ? id_paciente !== undefined
-          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado = "T"'
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado = "T"'
           : id_doctor !== undefined
-          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado = "T"'
-          : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor,D.id_especialidad FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.estado = "T"'
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado = "T"'
+          : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor,D.id_especialidad,DT.id_enfermedad,E.enfermedad FROM consultas C,det_consulta DT,pacientes P,doctores D,enfermedades E WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id = DT.id_consulta AND C.estado = "T" AND DT.id_enfermedad = E.id'
         : id_paciente !== undefined
-        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado <> "T"'
+        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado <> "T"'
         : id_doctor !== undefined
-        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado <> "T"'
-        : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM citas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.estado <> "T"'
+        ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado <> "T"'
+        : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.estado <> "T"'
 
     conexion.query(query, [id], (err: AnyType, results: AnyType) => {
       if (results?.length === 0) {
@@ -54,7 +54,7 @@ exports.registerConsultas = async (req: Request, res: Response) => {
     req.body.condition
   )
   conexion.query(
-    'INSERT INTO citas SET ?',
+    'INSERT INTO consultas SET ?',
     {
       id_paciente,
       id_doctor,
@@ -80,7 +80,7 @@ exports.updateConsultas = async (req: Request, res: Response) => {
     await new Consultas(req.body.condition)
 
   conexion.query(
-    'UPDATE citas SET id_paciente = ?,id_doctor = ?, asunto = ?, id_tanda = ?, dia = ?, fecha_insercion = ?, estado = ?,receta = ? WHERE id = ?',
+    'UPDATE consultas SET id_paciente = ?,id_doctor = ?, asunto = ?, id_tanda = ?, dia = ?, fecha_insercion = ?, estado = ?,receta = ? WHERE id = ?',
     [
       id_paciente,
       id_doctor,
@@ -297,7 +297,7 @@ exports.getDetCitas = async (req: Request, res: Response) => {
   try {
     const { id_cita } = await new Det_citas(req.body.condition)
     conexion.query(
-      'SELECT DC.*,TL.nombre tipo_lesion,CL.color color FROM det_citas DC, tipo_lesion TL,color_lesion CL WHERE Dc.id_tipo_lesion = TL.id AND DC.id_color_lesion = CL.id AND DC.id_cita = ?',
+      'SELECT DC.*,TL.nombre tipo_lesion,CL.color color FROM det_consulta DC, tipo_lesion TL,color_lesion CL WHERE Dc.id_tipo_lesion = TL.id AND DC.id_color_lesion = CL.id AND DC.id_cita = ?',
       [id_cita],
       (err: AnyType, results: AnyType) => {
         if (results?.length === 0) {
@@ -362,7 +362,7 @@ exports.registerDetCitas = async (req: Request, res: Response) => {
     detalles_extras,
   } = await new Det_citas(req.body.condition)
   conexion.query(
-    'INSERT INTO det_citas SET ?',
+    'INSERT INTO det_consulta SET ?',
     {
       id_cita,
       id_tipo_lesion,
@@ -405,7 +405,7 @@ exports.updateDetCitas = async (req: Request, res: Response) => {
   } = await new Det_citas(req.body.condition)
 
   conexion.query(
-    'UPDATE det_citas SET id_cita = ?, id_tipo_lesion = ?, id_color_lesion = ?,localizacion = ?,antecedentes_patologicos = ?,tratamiento_previo = ?,lesiones_anteriores = ?,fecha_lesion_anterior = ?,detalles_extras = ?,estado = ? WHERE id = ?',
+    'UPDATE det_consulta SET id_cita = ?, id_tipo_lesion = ?, id_color_lesion = ?,localizacion = ?,antecedentes_patologicos = ?,tratamiento_previo = ?,lesiones_anteriores = ?,fecha_lesion_anterior = ?,detalles_extras = ?,estado = ? WHERE id = ?',
     [
       id_cita,
       id_tipo_lesion,
