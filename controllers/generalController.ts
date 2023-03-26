@@ -28,7 +28,7 @@ exports.getConsultas = async (req: Request, res: Response) => {
           : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id'
         : estado === 'T'
         ? id_paciente !== undefined
-          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado = "T"'
+          ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor, E.nombre especialidad FROM consultas C,pacientes P,doctores D,especialidad E WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_paciente = ? AND C.estado = "T" AND D.id_especialidad = E.id'
           : id_doctor !== undefined
           ? 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor FROM consultas C,pacientes P,doctores D WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id_doctor = ? AND C.estado = "T"'
           : 'SELECT C.*,P.nombres nombre_paciente,P.apellidos apellido_paciente,D.nombre nombre_doctor,D.apellido apellido_doctor,D.id_especialidad,DT.id_enfermedad,E.enfermedad FROM consultas C,det_consulta DT,pacientes P,doctores D,enfermedades E WHERE C.id_paciente = P.id AND C.id_doctor = D.id AND C.id = DT.id_consulta AND C.estado = "T" AND DT.id_enfermedad = E.id'
@@ -210,6 +210,104 @@ exports.updatePaciente = async (req: Request, res: Response) => {
         })
       } else {
         res.status(200).send({ message: 'Paciente Actualizado con exito' })
+      }
+    }
+  )
+}
+exports.getRecepcionistas = async (req: Request, res: Response) => {
+  try {
+    conexion.query(
+      'SELECT R.*,N.nombre nacionalidad FROM recepcionistas R, seguros S,nacionalidad N WHERE  R.id_nacionalidad = N.id',
+      (err: AnyType, results: AnyType) => {
+        if (results?.length === 0) {
+          res.status(400).send({ message: errorData })
+        } else {
+          const data = results?.map((item: AnyType) => {
+            return {
+              ...item,
+              clave: cryptr.decrypt(item.clave),
+            }
+          })
+          res.status(200).send({
+            data,
+          })
+        }
+      }
+    )
+  } catch (error: AnyType) {
+    res.status(400).send({ message: error })
+  }
+}
+exports.registerRecepcionistas = async (req: Request, res: Response) => {
+  const {
+    cedula,
+    nombres,
+    apellidos,
+    fecha_nacimiento,
+    id_nacionalidad,
+    telefono,
+    sexo,
+    clave,
+  } = await new Paciente(req.body.condition)
+  conexion.query(
+    'INSERT INTO recepcionistas SET ?',
+    {
+      cedula,
+      nombres,
+      apellidos,
+      fecha_nacimiento,
+      id_nacionalidad,
+      telefono,
+      sexo,
+      clave: cryptr.encrypt(clave),
+      fecha_insercion: new Date(),
+    },
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error registrando Recepcionista',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Recepcionista registrado con exito' })
+      }
+    }
+  )
+}
+exports.updateRecepcionistas = async (req: Request, res: Response) => {
+  const {
+    cedula,
+    nombres,
+    apellidos,
+    fecha_nacimiento,
+    id_nacionalidad,
+    telefono,
+    sexo,
+    estado,
+    id,
+  } = await new Paciente(req.body.condition)
+
+  conexion.query(
+    'UPDATE recepcionistas SET cedula = ?,nombres = ?, apellidos = ?, fecha_nacimiento = ?,id_nacionalidad = ?,telefono = ?, sexo = ?, estado = ? WHERE id = ?',
+    [
+      cedula,
+      nombres,
+      apellidos,
+      new Date(fecha_nacimiento),
+      id_nacionalidad,
+      telefono,
+      sexo,
+      estado,
+      id,
+    ],
+    (err: AnyType, results: Response) => {
+      if (!results) {
+        res.status(400).send({
+          message: 'Error Actualizando Recepcionista',
+          error: err?.sqlMessage,
+        })
+      } else {
+        res.status(200).send({ message: 'Recepcionista Actualizado con exito' })
       }
     }
   )

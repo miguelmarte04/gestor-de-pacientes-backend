@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-03-2023 a las 23:22:05
+-- Tiempo de generación: 26-03-2023 a las 06:04:45
 -- Versión del servidor: 10.3.16-MariaDB
 -- Versión de PHP: 7.3.7
 
@@ -91,7 +91,7 @@ CREATE TABLE `consultas` (
 INSERT INTO `consultas` (`id`, `id_paciente`, `id_doctor`, `id_tanda`, `asunto`, `dia`, `receta`, `fecha_insercion`, `estado`) VALUES
 (8, 5, 6, 'M', 'asadsad', 2, NULL, '2023-03-05 20:39:12', 'T'),
 (9, 5, 6, 'T', 'asadsad', 2, NULL, '2023-03-15 20:39:12', 'T'),
-(10, 5, 6, 'M', 'adsad', 1, NULL, '2023-03-25 18:21:22', 'T');
+(10, 5, 6, 'M', 'adsad', 1, NULL, '2023-03-25 18:21:22', 'A');
 
 -- --------------------------------------------------------
 
@@ -274,6 +274,33 @@ INSERT INTO `pacientes` (`id`, `cedula`, `nombres`, `apellidos`, `imagen`, `fech
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `recepcionistas`
+--
+
+CREATE TABLE `recepcionistas` (
+  `id` int(11) NOT NULL,
+  `cedula` varchar(12) NOT NULL,
+  `nombres` varchar(50) NOT NULL,
+  `apellidos` varchar(50) NOT NULL,
+  `fecha_nacimiento` datetime NOT NULL,
+  `id_nacionalidad` int(11) NOT NULL,
+  `telefono` varchar(12) NOT NULL,
+  `sexo` varchar(1) NOT NULL,
+  `clave` longtext NOT NULL,
+  `fecha_insercion` datetime NOT NULL,
+  `estado` varchar(1) NOT NULL DEFAULT 'A'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `recepcionistas`
+--
+
+INSERT INTO `recepcionistas` (`id`, `cedula`, `nombres`, `apellidos`, `fecha_nacimiento`, `id_nacionalidad`, `telefono`, `sexo`, `clave`, `fecha_insercion`, `estado`) VALUES
+(1, '12121212121', 'asdsad1', 'asdsad', '2023-03-09 03:38:02', 1, '12121212121', 'M', '82490f01ec82df12c39db9a8c15ac45fa01a4277063855426385e398c6752dad3f3f7800ccba5af289cd1eb475cb994fe7d45bf22fe3dfc9007da4fffe175564074e167cc83e7a44743e4b272910c8e9bf6d04e0ea0be00afd70cf70a04835b861af3f545e408638', '2023-03-25 23:38:12', 'A');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `seguros`
 --
 
@@ -388,6 +415,14 @@ ALTER TABLE `pacientes`
 ALTER TABLE `pacientes` ADD FULLTEXT KEY `nombres` (`cedula`,`nombres`,`apellidos`);
 
 --
+-- Indices de la tabla `recepcionistas`
+--
+ALTER TABLE `recepcionistas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_nacionalidad` (`id_nacionalidad`);
+ALTER TABLE `recepcionistas` ADD FULLTEXT KEY `nombres` (`cedula`,`nombres`,`apellidos`);
+
+--
 -- Indices de la tabla `seguros`
 --
 ALTER TABLE `seguros`
@@ -464,6 +499,12 @@ ALTER TABLE `pacientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `recepcionistas`
+--
+ALTER TABLE `recepcionistas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `seguros`
 --
 ALTER TABLE `seguros`
@@ -514,6 +555,12 @@ ALTER TABLE `horarios`
 ALTER TABLE `pacientes`
   ADD CONSTRAINT `pacientes_ibfk_1` FOREIGN KEY (`id_seguro`) REFERENCES `seguros` (`id`),
   ADD CONSTRAINT `pacientes_ibfk_2` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidad` (`id`);
+
+--
+-- Filtros para la tabla `recepcionistas`
+--
+ALTER TABLE `recepcionistas`
+  ADD CONSTRAINT `recepcionistas_ibfk_1` FOREIGN KEY (`id_nacionalidad`) REFERENCES `nacionalidad` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

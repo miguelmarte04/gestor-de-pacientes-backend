@@ -12,6 +12,7 @@ import {
   registerEspecialidades,
   registerHorarios,
   registerPaciente,
+  registerRecepcionistas,
   updateAdministradores,
   updateConsultas,
   updateDetCitas,
@@ -19,6 +20,7 @@ import {
   updateEspecialidades,
   updateHorarios,
   updatePaciente,
+  updateRecepcionistas,
 } from '../validation/validationORM'
 const router = express.Router()
 const authController = require('../controllers/authController')
@@ -56,6 +58,17 @@ router.put(
   '/pacientes/paciente',
   validateSchema(updatePaciente),
   generalController.updatePaciente
+)
+router.post('/recepcionistas', generalController.getRecepcionistas)
+router.post(
+  '/recepcionistas/recepcionista',
+  validateSchema(registerRecepcionistas),
+  generalController.registerRecepcionistas
+)
+router.put(
+  '/recepcionistas/recepcionista',
+  validateSchema(updateRecepcionistas),
+  generalController.updateRecepcionistas
 )
 router.post('/administradores', generalController.getAdministradores)
 router.post(

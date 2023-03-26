@@ -82,10 +82,6 @@ exports.login = async (req: Request, res: Response) => {
         'SELECT * FROM administradores WHERE cedula = ? AND estado="A"',
         [user],
         async (_err: AnyType, results: AnyType) => {
-          // console.log(
-          //   'entro',
-          //   results?.[0]?.clave && cryptr?.decrypt(results?.[0]?.clave)
-          // )
           if (
             results?.length === 0 ||
             !(
@@ -115,9 +111,72 @@ exports.login = async (req: Request, res: Response) => {
                           cryptr.decrypt(results3?.[0]?.clave) === password
                         )
                       ) {
-                        res
-                          .status(400)
-                          .send({ message: 'Usuario o contraseña incorrectos' })
+                        conexion.query(
+                          'SELECT * FROM recepcionistas WHERE cedula = ? AND estado="A"',
+                          [user],
+                          async (_err: AnyType, results4: AnyType) => {
+                            if (
+                              results4?.length === 0 ||
+                              !(
+                                results4?.[0]?.clave &&
+                                cryptr.decrypt(results4?.[0]?.clave) ===
+                                  password
+                              )
+                            ) {
+                              res.status(400).send({
+                                message: 'Usuario o contraseña incorrectos',
+                              })
+                            } else {
+                              try {
+                                const {
+                                  id,
+                                  usuario,
+                                  nombres,
+                                  apellidos,
+                                  cedula,
+                                } = results4[0]
+                                const token = jwt.sign(
+                                  { id: id },
+                                  process.env.JWR_SECRETO,
+                                  {
+                                    expiresIn: process.env.JWT_TIEMPO_EXPIRA,
+                                  }
+                                )
+                                const cookieOptions = {
+                                  expires: new Date(
+                                    Date.now() +
+                                      Number(process.env.JWT_TIEMPO_EXPIRA) *
+                                        24 *
+                                        60 *
+                                        60 *
+                                        1000
+                                  ),
+                                }
+                                const expirationDate = new Date()
+                                expirationDate.setDate(
+                                  expirationDate.getDate() + 1
+                                )
+                                res.cookie('jwt', token, cookieOptions)
+                                res.status(200).send({
+                                  data: {
+                                    usuario: usuario ?? cedula,
+                                    nombres: nombres,
+                                    privilegios: 4,
+                                    apellidos: apellidos,
+                                    id: id,
+                                    imagen: '',
+                                    sessionCookie: {
+                                      token: token,
+                                      expiracion: expirationDate.toUTCString(),
+                                    },
+                                  },
+                                })
+                              } catch (error) {
+                                res.status(400).send({ message: error })
+                              }
+                            }
+                          }
+                        )
                       } else {
                         try {
                           const {
