@@ -49,6 +49,7 @@ router.put(
   generalController.updateConsultas
 )
 router.post('/pacientes', generalController.getPaciente)
+router.post('/copia_db', generalController.copiaDB)
 router.post(
   '/pacientes/paciente',
   validateSchema(registerPaciente),

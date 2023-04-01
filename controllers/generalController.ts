@@ -11,6 +11,7 @@ import { errorData } from '../constants/general'
 import { deleteKeys } from '../helpers/general'
 import { Det_citas, Empleados } from '../entity/auth'
 import { cryptr } from './authController'
+import mysqldump from 'mysqldump'
 export type AnyType<T = any> = T
 // const bcryptjs = require('bcryptjs')
 exports.getConsultas = async (req: Request, res: Response) => {
@@ -104,6 +105,27 @@ exports.updateConsultas = async (req: Request, res: Response) => {
     }
   )
 }
+exports.copiaDB = async (req: Request, res: Response) => {
+  const result = await mysqldump({
+    connection: {
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_DATABASE,
+    },
+    dumpToFile: './Copia_DB/dump.sql',
+  })
+
+  if (result === undefined) {
+    res.status(400).send({
+      message: 'Error al copiar la base de datos',
+      error: 'Error al copiar la base de datos',
+    })
+  } else {
+    res.status(200).send({ message: 'Copia de la base de datos exitosa' })
+  }
+}
+
 exports.getPaciente = async (req: Request, res: Response) => {
   try {
     conexion.query(
