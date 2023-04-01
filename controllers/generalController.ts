@@ -113,7 +113,7 @@ exports.copiaDB = async (req: Request, res: Response) => {
       password: process.env.DB_PASS,
       database: process.env.DB_DATABASE,
     },
-    dumpToFile: './Copia_DB/dump.sql',
+    dumpToFile: './Copia_DB/CopiaSeguridad.sql',
   })
 
   if (result === undefined) {
