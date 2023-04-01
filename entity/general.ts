@@ -13,6 +13,8 @@ export class Consultas extends BaseEntity<Consultas> {
   @Column({ type: 'varchar2', length: 100, nullable: false })
   asunto: string
   @Column({ type: 'varchar2', length: 100, nullable: false })
+  cedula: string
+  @Column({ type: 'varchar2', length: 100, nullable: false })
   id_tanda: string
   @Column({ type: 'varchar2', nullable: false })
   detalles_consulta: string

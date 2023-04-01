@@ -120,6 +120,11 @@ export const registerPaciente = Joi.object().keys({
     clave: requiredString,
   }),
 })
+export const existId = Joi.object().keys({
+  condition: Joi.object().keys({
+    cedula: requiredString,
+  }),
+})
 export const registerRecepcionistas = Joi.object().keys({
   condition: Joi.object().keys({
     cedula: requiredString,

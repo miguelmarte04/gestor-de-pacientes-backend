@@ -105,6 +105,44 @@ exports.updateConsultas = async (req: Request, res: Response) => {
     }
   )
 }
+exports.existId = async (req: Request, res: Response) => {
+  const { cedula } = await new Consultas(req.body.condition)
+  conexion.query(
+    'SELECT id FROM administradores WHERE cedula=? LIMIT 1',
+    [cedula],
+    (err: AnyType, results: AnyType) => {
+      if (results?.length === 0) {
+        conexion.query(
+          'SELECT id FROM pacientes WHERE cedula=? LIMIT 1',
+          [cedula],
+          (err: AnyType, results2: AnyType) => {
+            if (results2?.length === 0) {
+              conexion.query(
+                'SELECT id FROM doctores WHERE cedula=? LIMIT 1',
+                [cedula],
+                (err: AnyType, results3: AnyType) => {
+                  if (results3?.length === 0) {
+                    res.status(200).send({ message: 'Cédula no encontrada' })
+                  } else {
+                    res.status(400).send({
+                      message: 'Cedula encontrada',
+                      error: err?.sqlMessage,
+                    })
+                  }
+                }
+              )
+            }
+          }
+        )
+      } else {
+        res.status(400).send({
+          message: 'Cedula encontrada',
+          error: err?.sqlMessage,
+        })
+      }
+    }
+  )
+}
 exports.copiaDB = async (req: Request, res: Response) => {
   const result = await mysqldump({
     connection: {

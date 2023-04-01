@@ -2,6 +2,7 @@ import { express } from '../app'
 import { validateSchema } from '../database/validation'
 import {
   cambiarContraSchema,
+  existId,
   getConsulta,
   getDetCitas,
   personaSchema,
@@ -50,6 +51,7 @@ router.put(
 )
 router.post('/pacientes', generalController.getPaciente)
 router.post('/copia_db', generalController.copiaDB)
+router.post('/exist_id', validateSchema(existId), generalController.existId)
 router.post(
   '/pacientes/paciente',
   validateSchema(registerPaciente),
