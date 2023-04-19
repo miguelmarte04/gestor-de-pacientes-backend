@@ -1,3 +1,3 @@
-# human-resources-system-Backend
+# 
 
-Backend de la plataforma de Recursos Humanos
+Backend del Gestor de Pacientes
